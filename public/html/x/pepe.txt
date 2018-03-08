@@ -1,0 +1,6 @@
+<entrada>
+Estamos entrando
+</entrada>
+<salida>
+Estamos saliendo
+</salida>

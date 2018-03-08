@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Enlaces</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style type="text/css">
+    </style>
+
+    <script type="text/javascript">
+
+      window.onload = function() {
+        //document.getElementById("title").focus();
+      };
+      //
+      function selecciona(id_enlace_e, enlace_e, titulo_e, id_categoria_e, id_usuario_e) {
+
+        document.getElementById("id_enlace_e").value = id_enlace_e;
+        document.getElementById("enlace_e").value = enlace_e;
+        document.getElementById("titulo_e").value = titulo_e;
+        document.getElementById("id_categoria_e").value = id_categoria_e;
+        document.getElementById("id_usuario_e").value = id_usuario_e;
+
+        recuperaCategorias(id_categoria_e);
+
+        return true;
+      }
+
+      ////////////////////////////////////////////////////////////
+    		function recuperaCategorias(idCategoria) {
+    			var objDato = {};
+    			var xhttp = new XMLHttpRequest();
+    			xhttp.onreadystatechange = function() {
+      			if (this.readyState == 4 && this.status == 200) {
+    					objDato = JSON.parse(this.responseText);
+    					if (objDato.categorias1N != undefined) creaDD(objDato.categorias1N, "Tipo1N", false);
+    					if (objDato.categorias2N != undefined) creaDD(objDato.categorias2N, "Tipo2N", false);
+    					if (objDato.categorias3N != undefined) creaDD(objDato.categorias3N, "Tipo3N", false);
+    				}
+    			}
+          var url = "/enlaces/idcat/" + idCategoria;
+    			xhttp.open("GET", url, true);
+    			xhttp.send();
+    		}
+        ///////////////////////////////////////////////////////////////////////
+        function recuperaCategoriasSiguientes(idCategoria, nivel) {
+          var objDato = {};
+    			var xhttp = new XMLHttpRequest();
+    			xhttp.onreadystatechange = function() {
+      			if (this.readyState == 4 && this.status == 200) {
+    					objDato = JSON.parse(this.responseText);
+              switch(nivel) {
+            	case 1:
+          			creaDD(objDato, "Tipo1N", true);
+                break;
+            	case 2:
+          			creaDD(objDato, "Tipo2N", true);
+                break;
+          		case 3:
+          			creaDD(objDato, "Tipo3N", true);
+          			break;
+          		}
+    				}
+    			}
+          var url = "/enlaces/idcatsig/" + idCategoria;
+    			xhttp.open("GET", url, true);
+    			xhttp.send();
+    		}
+        ///////////////////////////////////////////////////////////////////////
+        function expandeCategoria(idCategoria, nivel) {
+    			var objDato = {};
+    			var xhttp = new XMLHttpRequest();
+    			xhttp.onreadystatechange = function() {
+      			if (this.readyState == 4 && this.status == 200) {
+    					objDato = JSON.parse(this.responseText);
+              switch(nivel) {
+            	case 1:
+          			creaDD(objDato, "Tipo1N", true);
+                vaciaDD(["Tipo2N","Tipo3N"]);
+                break;
+            	case 2:
+          			creaDD(objDato, "Tipo2N", true);
+                vaciaDD(["Tipo3N"])
+                break;
+          		case 3:
+          			creaDD(objDato, "Tipo3N", true);
+          			break;
+          		}
+    				}
+    			}
+          var url = "/enlaces/idcatex/" + idCategoria;
+    			xhttp.open("GET", url, true);
+    			xhttp.send();
+    		}
+        ////////////////////////////////////////////////////////////
+    		function creaDD(dato, iSelector, blanco) {
+          var dd = document.getElementById(iSelector);  // dropdown
+          dd.length = 0;
+          if (blanco==true) {
+            option = document.createElement('option');
+            dd.add(option);
+          }
+          for (var i = 0; i < dato.length; i++) {
+            option = document.createElement('option');
+            option.value = dato[i].id_categoria_c;
+    				option.text = dato[i].titulo_c;
+            dd.add(option);
+          }
+          dd.selectedIndex = 0;
+        }
+        /////////////////////////////////////////////////////////////////////
+        function vaciaDD(dds) {
+          for (var i = 0;i < dds.length;i++) {
+            document.getElementById(dds[i]).options.length = 0;
+          }
+        }
+        /////////////////////////////////////////////////////////////////////
+        function seleccionaAction(idForm, valor) {
+          if (parseInt(valor) > 0) {
+            document.getElementById(idForm).action = "/enlaces/upd";
+            respuesta = true;
+          } else {
+            document.getElementById(idForm).action = "/enlaces/add";
+            respuesta = true;
+          }
+          return respuesta;
+        }
+    </script>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <a href="#" class="navbar-brand mx-auto">Enlaces</a>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col mt-2">
+          <table class="table table-striped">
+            <tr>
+              <th>Id</th><th>Enlace</th><th>Titulo</th>
+              <th>Cat</th><th>Usu</th>
+            </tr>
+            <% for(var i = 0; i < enlaces.length; i++) { %>
+              <tr onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
+                    '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')">
+                    <td><%= enlaces[i].id_enlace_e %></td>
+                    <td><%= enlaces[i].enlace_e %></td>
+                    <td><%= enlaces[i].titulo_e %></td>
+                    <td><%= enlaces[i].id_categoria_e %></td>
+                    <td><%= enlaces[i].id_usuario_e %></td>
+              </tr>
+            <% } %>
+          </table>
+        </div> <!-- 1 col   Table end -->
+
+        <div class="col mt-2">
+          <form method="post" id="idFormEnlaces" action="" class="form-control"
+                onsubmit="seleccionaAction('idFormEnlaces', document.getElementById('id_enlace_e').value)">
+            <h4>Agrega enlace</h4>
+            <div class="form-group">
+              <input type="text" name="id_enlace_e" id="id_enlace_e" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <input type="text" name="enlace_e" id="enlace_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="text" name="titulo_e" id="titulo_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="hidden" name="id_categoria_e" id="id_categoria_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="hidden" name="id_usuario_e" id="id_usuario_e" class="form-control">
+            </div>
+
+            <!-- Select para cargar categorias -->
+            <div class="container row">
+              <div class="col">
+                <div id="div1N" class="form-group">
+          		      <select id="Tipo1N" name="Tipo1N" onchange="recuperaCategoriasSiguientes(this.value, 2)"
+                        style="width: 250px !important; min-width: 50px; max-width: 250px;" class="form-control">
+                      <option></option>
+          		      </select>
+          	    </div>
+              </div>
+              <div class="col">
+                <button type="button" onclick="expandeCategoria(document.getElementById('Tipo1N').value, 1)"
+                  class="btn btn-default">Expand</button>
+              </div>
+              <div class="col">
+                <input type="text" name="addupdN1" id="addupdN1" class="form-control"  size="25" maxlength="25">
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-default btn-sm">Add</button>
+              </div>
+            </div>
+            <div class="container row">
+              <div class="col">
+          	    <div id="divDD2N" class="form-group">
+          		       <select id="Tipo2N" name="Tipo2N" onchange="recuperaCategoriasSiguientes(this.value, 3)"
+                        style="width: 250px !important; min-width: 50px; max-width: 250px;">
+                       <option></option>
+                     </select>
+                </div>
+              </div>
+              <div class="col">
+                <button type="button" onclick="expandeCategoria(document.getElementById('Tipo2N').value, 2)"
+                  class="btn btn-default btn-sm">Expand</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-default btn-sm">Add</button>
+              </div>
+            </div>
+            <div class="container row">
+              <div class="col">
+          	    <div id="divDD3N" class="form-group">
+          		       <select id="Tipo3N" name="Tipo3N" onchange=""
+                        style="width: 250px !important; min-width: 50px; max-width: 250px;">
+                       <option></option>
+                     </select>
+                </div>
+              </div>
+              <div class="col">
+                <button type="button" onclick="expandeCategoria(document.getElementById('Tipo3N').value, 3)"
+                  class="btn btn-default btn-sm">Expand</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-default btn-sm">Add</button>
+              </div>
+            </div>
+            <!-- Select para cargar categorias -->
+
+            <input type="submit" class="btn btn-primary">
+          </form>
+        </div>
+
+      </div>   <!-- row -->
+    </div>     <!-- End Main container   ---->
+
+
+
+  <!--  =====================================================  -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Enlaces</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style type="text/css">
+    </style>
+
+    <script type="text/javascript">
+
+      window.onload = function() {
+        //document.getElementById("title").focus();
+      };
+      //
+      function selecciona(id_enlace_e, enlace_e, titulo_e,
+                            descripcion_e, id_categoria_e, id_usuario_e) {
+
+        document.getElementById("id_enlace_e").value = id_enlace_e;
+        document.getElementById("enlace_e").value = enlace_e;
+        document.getElementById("titulo_e").value = titulo_e;
+        document.getElementById("descripcion_e").value = descripcion_e;
+        document.getElementById("id_categoria_e").value = id_categoria_e;
+        document.getElementById("id_usuario_e").value = id_usuario_e;
+
+        //creaDD("tiposCategoria", id_categoria_e, id_categoria_e);
+
+        cargaCategorias(id_categoria_e);
+
+        return true;
+      }
+    </script>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <a href="#" class="navbar-brand mx-auto">Enlaces</a>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mt-4 text-center">
+          <table class="table table-striped">
+            <tr>
+              <th>Id</th><th>Enlace</th><th>Titulo</th><th>Descripcion</th>
+              <th>Cat</th><th>Usu</th>
+            </tr>
+            <% for(var i = 0; i < enlaces.length; i++) { %>
+              <tr onclick="selecciona(
+                    '<%= enlaces[i].id_enlace_e %>',
+                    '<%= enlaces[i].enlace_e %>',
+                    '<%= enlaces[i].titulo_e %>',
+                    '<%= enlaces[i].descripcion_e %>',
+                    '<%= enlaces[i].id_categoria_e %>',
+                    '<%= enlaces[i].id_usuario_e %>')">
+                    <td><%= enlaces[i].id_enlace_e %></td>
+                    <td><%= enlaces[i].enlace_e %></td>
+                    <td><%= enlaces[i].titulo_e %></td>
+                    <td><%= enlaces[i].descripcion_e %></td>
+                    <td><%= enlaces[i].id_categoria_e %></td>
+                    <td><%= enlaces[i].id_usuario_e %></td>
+              </tr>
+            <% } %>
+          </table>
+        </div> <!-- Table end -->
+
+        <div class="col-md-6 mt-4 card">
+          <form method="post" class="card-body" id="idFormEnlaces" action=""
+                onsubmit="seleccionaAction('idFormEnlaces', document.getElementById('id_enlace_e').value)">
+            <h3 class="card-title">Agrega enlace</h3>
+            <div class="form-group">
+              <input type="text" name="id_enlace_e" id="id_enlace_e" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <input type="text" name="enlace_e" id="enlace_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="text" name="titulo_e" id="titulo_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="text" name="descripcion_e" id="descripcion_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="hidden" name="id_categoria_e" id="id_categoria_e" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="hidden" name="id_usuario_e" id="id_usuario_e" class="form-control">
+            </div>
+
+            <!-- Select para cargar categorias -->
+            <div class="form-group">
+              <select id="tiposCategoria1N">
+              <% for(var i = 0; i < categorias1N.length; i++) { %>
+                  <option
+                  value="<%= categorias1N[i].id_categoria_c %>">
+                      <%= categorias1N[i].titulo_c %></option>
+              <% } %>
+              </select>
+            </div>       <!-- Select categorias -->
+            <!-- Select para cargar categorias -->
+            <div class="form-group">
+              <select id="tiposCategoria2N">
+              <% for(var i = 0; i < categorias2N.length; i++) { %>
+                  <option
+                  value="<%= categorias2N[i].id_categoria_c %>">
+                      <%= categorias2N[i].titulo_c %></option>
+              <% } %>
+              </select>
+            </div>       <!-- Select categorias -->
+
+            <input type="submit" class="btn btn-primary">
+          </form>
+        </div>
+      </div>   <!-- row -->
+    </div>     <!-- End Main container   ---->
+
+  <!--  =====================================================  -->
+  <script type="text/javascript">
+    function cargaCategorias(nivel, prede) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          nameObj = JSON.parse(this.responseText);
+          //sdocument.getElementById("demo").textContent = this.responseText;
+          creaDD(nameObj,"Tipo");
+        }
+      }
+      var url = "/enlaces/" + nivel + "/" + prede;
+      xhttp.open("GET", url, true);
+      xhttp.send();
+    }
+
+    function creaDD(dato, iSelector) {
+      var dd = document.getElementById(iSelector);  // dropdown
+      dd.length = 0;
+
+      var defaultOption = document.createElement('option');
+      defaultOption.text = 'Elija tipo';
+
+      dd.add(defaultOption);
+      dd.selectedIndex = 0;
+
+      for (var i = 0; i < dato.length; i++) {
+        option = document.createElement('option');
+        option.text = tipoEnvioDat[i].val;
+        option.value = tipoEnvioDat[i].cod;
+        dd.add(option);
+      }
+    }
+
+    function seleccionaAction(idForm, valor) {
+      if (parseInt(valor) > 0) {
+        document.getElementById(idForm).action = "/enlaces/upd";
+        respuesta = true;
+      } else {
+        document.getElementById(idForm).action = "/enlaces/add";
+        respuesta = true;
+      }
+      return respuesta;
+    }
+
+  </script>
+  <!-- -->
+  <div id="iDropdown">
+    <select id="Tipo" name="Tipo" onchange="">
+      <option value="default">Seleccione tipo</option>
+    </select>
+  </div>
+  <!-- -->
+</body>
+</html>

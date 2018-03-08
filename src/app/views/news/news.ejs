@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>News</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style type="text/css">
+    </style>
+
+    <script type="text/javascript">
+
+      window.onload = function() {
+        document.getElementById("title").focus();
+      };
+
+      function selecciona(id, title, news) {
+
+        document.getElementById("id_news").value = id;
+        document.getElementById("title").value = title;
+        document.getElementById("news").value = news;
+
+        return true;
+      }
+    </script>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <a href="#" class="navbar-brand mx-auto">News</a>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mt-4 text-center">
+          <table class="table table-striped">
+            <tr><th>ID</th><th>TITLE</th><th>NEWS</th></tr>
+            <% for(var i = 0; i < news.length; i++) { %>
+              <tr onclick="selecciona('<%= news[i].id_news %>',
+                                        '<%= news[i].title %>',
+                                          '<%= news[i].news %>')">
+                <td><%= news[i].id_news %></td>
+                <td><%= news[i].title %></td>
+                <td><%= news[i].news %></td>
+              </tr>
+            <% } %>
+          </table>
+        </div>
+      </div>
+      <script type="text/javascript">
+      function seleccionaAction(idForm, valor) {
+        if (parseInt(valor) > 0) {
+          document.getElementById(idForm).action = "/news/upd";
+          respuesta = true;
+        } else {
+          document.getElementById(idForm).action = "/news/add";
+          respuesta = true;
+        }
+        return respuesta;
+      }
+      </script>
+
+      <div class="col-md-6 mt-4 card">
+        <form method="post" class="card-body" id="idFormNews" action=""
+              onsubmit="seleccionaAction('idFormNews', document.getElementById('id_news').value)">
+          <h3 class="card-title">Add News</h3>
+          <div class="form-group">
+            <input type="text" name="id_news" id="id_news" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+            <input type="text" name="title" id="title" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="news" id="news" class="form-control">
+          </div>
+          <input type="submit" class="btn btn-primary">
+        </form>
+      </div>
+    </div>
+
+	<div>
+
+	</div>
+
+  </body>
+</html>

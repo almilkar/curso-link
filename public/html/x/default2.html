@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Index Nodejs-mySql</title>
+</head>
+<body>
+	<h3>Hola, soy default.html en public</h3>
+	<script type="text/javascript">
+		function loadXMLDoc() {
+			var objDato = {};
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+  			if (this.readyState == 4 && this.status == 200) {
+					objDato = JSON.parse(this.responseText);
+					//document.getElementById("demo").textContent = this.responseText;
+					/*
+					Object.keys(nameObj).forEach(function(key) {
+    				console.log(key + ': ' + nameObj[key]);
+						Object.keys(nameObj[key]).forEach(function(subkey) {
+								console.log(subkey + ': ' + nameObj[key][subkey]);
+						});
+					});
+					*/
+					if (objDato.categorias1N != undefined) creaDD(objDato.categorias1N, "Tipo1N");
+					if (objDato.categorias2N != undefined) creaDD(objDato.categorias2N, "Tipo2N");
+					if (objDato.categorias3N != undefined) creaDD(objDato.categorias3N, "Tipo3N");
+				}
+			}
+			xhttp.open("GET", "/enlaces/idcat/2", true);
+			xhttp.send();
+		}
+
+		function creaDD(dato, iSelector) {
+      var dd = document.getElementById(iSelector);  // dropdown
+      dd.length = 0;
+
+      var defaultOption = document.createElement('option');
+      defaultOption.text = 'Elija tipo';
+
+      dd.add(defaultOption);
+      dd.selectedIndex = 0;
+
+      for (var i = 0; i < dato.length; i++) {
+        option = document.createElement('option');
+        option.value = dato[i].id_categoria_c;
+				option.text = dato[i].titulo_c;
+        dd.add(option);
+      }
+    }
+
+	</script>
+
+	<div id="pp">
+		<button type="button" onclick="loadXMLDoc()">Change Content</button>
+		<p id="demo"></p>
+	</div>
+
+	<!-- -->
+	<div id="div1N">
+		<select id="Tipo1N" name="Tipo1N" onchange="">
+			<option value="default">Seleccione tipo</option>
+		</select>
+	</div>
+	<div id="divDD2N">
+		<select id="Tipo2N" name="Tipo2N" onchange="">
+			<option value="default">Seleccione tipo</option>
+		</select>
+	</div>
+	<div id="divDD3N">
+		<select id="Tipo3N" name="Tipo3N" onchange="">
+			<option value="default">Seleccione tipo</option>
+		</select>
+	</div>
+	<!-- -->
+
+	</body>
+	</html>
