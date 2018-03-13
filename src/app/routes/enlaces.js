@@ -58,26 +58,17 @@ module.exports = app => {
 	});
 	/*	----------------------------------------------------------------
 		* 	/enlaces/idcatex/:idcat
-		* 	Recupera las categorías del mismo nivel que el de la categoría
-		* 	pasada como parámetro. La primera consulta obtiene el predecesor,
-		*		que junto con el nivel, es común para todas las que se obtienen en
-		* 	la consulta siguiente.
+		* 	Recupera todas las categorías del nivel 1
 		* 	Método para ajax
 		*		----------------------------------------------------------------
 	*/
-	app.get('/enlaces/idcatex/:idcat',  (req, res) => {
+	
+	app.get('/enlaces/idcatexgen',  (req, res) => {
 		var idcat = req.params.idcat;
 		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
-			' AND id_categoria_c = ' + connection.escape(idcat);
-		connection.query(sqlq, (err, resultA) => {
-			var nivel = resultA[0].nivel_c;
-			var prede = resultA[0].prede_c;
-			sqlq = 'SELECT id_categoria_c, titulo_c FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
-				' AND nivel_c = ' + connection.escape(nivel) +
-				' AND prede_c = ' + connection.escape(prede);
-			connection.query(sqlq, (err,resultB) => {
-				res.send(resultB);
-			});
+			' AND nivel_c = 1';
+		connection.query(sqlq, (err,result) => {
+				res.send(result);
 		});
 	});
 
