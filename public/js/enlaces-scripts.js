@@ -228,7 +228,10 @@ function modificaEnlace(idForm) {
   document.getElementById(idForm).submit();
 }
 
-function limpiaformEnlace(idForm) {
-
+function limpiaformsEnlace(forms) {
+  forms.forEach(formulario => {
+    var x = document.getElementById(formulario);
+    x.reset();
+  })
 }
 

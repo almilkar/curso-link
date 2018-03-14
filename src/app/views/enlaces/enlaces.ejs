@@ -120,12 +120,12 @@
               <div class="row mt-1 border-bottom ">
                 <div class="col-sm-6">
             	    <div id="divDD2N" class="select-editable">
-            		       <select  id="Tipo2N" name="Tipo2N"
+            		    <select  id="Tipo2N" name="Tipo2N"
                        onchange="{this.nextElementSibling.value = tomaSeleccion('Tipo2N');
-                                 recuperaCategoriasSiguientes(this.value, 3)}">
-                         <option></option>
-                       </select>
-                       <input type="text" name="tTipo2N" id="tTipo2N" value="">
+                              recuperaCategoriasSiguientes(this.value, 3)}">
+                      <option></option>
+                    </select>
+                    <input type="text" name="tTipo2N" id="tTipo2N" value="">
                   </div>
                 </div>
                 <div class="col-sm-1">
@@ -160,15 +160,19 @@
               </div>
               <!-- Fin Selects para cargar categorias -->
               
-
+              <!--                                     -->
               <div class="row mt-1 border-bottom">
                 <div class="col-sm-12">
                   <input type="button" value="New Link" onclick="nuevoEnlace()" 
                     class="btn btn-default">
                   <input type="button" value="Update Link" onclick="modificaEnlace()" 
                     class="btn btn-default">
+                  <input type="button" value="Clear" 
+                    onclick="limpiaformsEnlace(['idFormEnlaces','idFormCategorias'])" 
+                    class="btn btn-default">  
                 </div>
               <div>
+
           </form>
         </div>
 
