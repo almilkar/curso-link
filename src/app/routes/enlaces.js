@@ -57,7 +57,7 @@ module.exports = app => {
 		});
 	});
 	/*	----------------------------------------------------------------
-		* 	/enlaces/idcatex/:idcat
+		* 	/enlaces/idcatexgen/:idcat
 		* 	Recupera todas las categorías del nivel 1
 		* 	Método para ajax
 		*		----------------------------------------------------------------
@@ -89,7 +89,7 @@ module.exports = app => {
 			switch(nivel) {
 	  	case 1:
 				objRes.categorias1N = result;
-	      ifIdCatPrimerNivelSimple(objRes, idcat, nivel, prede, res);
+	      		ifIdCatPrimerNivelSimple(objRes, idcat, nivel, prede, res);
 	      break;
 	  	case 2:
 				objRes.categorias2N = result;
@@ -106,7 +106,6 @@ module.exports = app => {
 	function ifIdCatPrimerNivelSimple(objRes, idcat, nivel, prede, res) {
 		res.send(objRes);
 	};
-
 	function ifIdCatSegundoNivelSimple(objRes, idcat, nivel, prede, res) {
 		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
 		' AND id_categoria_c = ' + connection.escape(prede);
@@ -115,8 +114,6 @@ module.exports = app => {
 			res.send(objRes);
 		});
 	};
-
-	///////////////////////////////////////////////////////////   3 Nivel    /////////////////////
 	function ifIdCatTercerNivelSimple(objRes, idcat, nivel, prede, res) {
 			var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
 			' AND id_categoria_c = ' + connection.escape(prede);

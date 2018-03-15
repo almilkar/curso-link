@@ -74,26 +74,44 @@ function recuperaCategoriasSiguientes(idCategoria, nivel) {
   xhttp.open("GET", url, true);
   xhttp.send();
 }
-///////////////////////////////////////////////////////////////////////
-function expandeCategoria(idCategoria, nivel) {
-  var url;
+///////////////////////
 
-  if ((idCategoria == null)||(idCategoria == "")) {
-    if (nivel == 1) {
+function expandeCategoria(selectorCategoria, nivelaqui) {
+  
+  var url, arrCat, idCategoria, nivel, prede;
+
+
+  var selCat = document.getElementById(selectorCategoria);
+  var strCat = selCat.value;
+
+  if ((strCat == "") || (strCat == undefined)) {
+    if (nivelaqui == 1) {
       url = "/enlaces/idcatexgen/";  
     } else {
+      //url = "/enlaces/idcatex/" + idCategoria;
       return false;
     }
   } else {
-    url = "/enlaces/idcatex/" + idCategoria;
-  }
-  
+    arrCat = strCat.split("|");
+    if (arrCat.length == 3) {
+      idCategoria = arrCat[0];
+      nivel = arrCat[1];
+      prede = arrCat[2];
+      if (nivelaqui == 1) {
+        url = "/enlaces/idcatexgen/";  
+      } else {
+        //url = "/enlaces/idcatex/" + idCategoria;
+        return false;
+      }
+    }   
+  } 
+
   var objDato = {};
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       objDato = JSON.parse(this.responseText);
-      switch(nivel) {
+      switch(nivelaqui) {
       case 1:
         creaDD(objDato, "Tipo1N", true);
         vaciaDD(["Tipo2N","Tipo3N"]);
@@ -116,15 +134,19 @@ function expandeCategoria(idCategoria, nivel) {
 function creaDD(dato, iSelector, blanco) {
   var dd = document.getElementById(iSelector);  // dropdown
   dd.length = 0;
-  if (blanco==true) {
+  if (blanco == true) {
     //option = document.createElement('option');
     //dd.add(option);
     document.getElementById("t" + iSelector).value = "";
   }
-  var i;
-  for (i = 0; i < dato.length; i++) {
-    option = document.createElement('option');
-    option.value = dato[i].id_categoria_c;
+  
+  for (var i = 0; i < dato.length; i++) {
+    var option = document.createElement('option');
+    var cat = dato[i].id_categoria_c;
+    var niv = dato[i].nivel_c;
+    var pre = dato[i].prede_c;
+
+    option.value = cat + "|" + niv + "|" + pre;
     option.text = dato[i].titulo_c;
     dd.add(option);
   }
@@ -150,8 +172,6 @@ function vaciaDD(dds) {
   }
 }
 /////////////////////////////////////////////////////////////////////
-
-
 function tomaSeleccion(idDD) {
   var elem = document.getElementById(idDD);
   var valor = elem.options[elem.selectedIndex].value;
@@ -159,7 +179,14 @@ function tomaSeleccion(idDD) {
   return texto;
 }
 
-    
+/* ----------------------------------------------------------
+* leeSelectCategorias()
+* Se comprueba:
+* 1. Qué valores se seleccionaron en las listas desplegables (selectedIndex >= 0)
+* 2. Si se modificó la casilla con respecto el valor original, en cuyo caso se considera
+*    que se crea una nueva categoría
+* -----------------------------------------------------------
+*/
 function leeSelectCategorias() {
 
   var i3 = document.getElementById("Tipo3N").selectedIndex;
@@ -168,13 +195,14 @@ function leeSelectCategorias() {
 
   var valor3, valor2, valor1, valor_nuevo;
   var texto3, texto2, texto1, texto_nuevo;
-  var t3, t2, t1, indice;
+  var t3, t2, t1
+  var prede, nivel;
 
   if (i3>=0) {
     valor3 = document.getElementById("Tipo3N").options[i3].value;
-    texto3 = document.getElementById("Tipo3N").options[i3].text;
-        t3 = document.getElementById("tTipo3N").value;
-    if (texto3 != t3) {
+    texto3 = document.getElementById("Tipo3N").options[i3].text;  // texto select
+        t3 = document.getElementById("tTipo3N").value;            //input text sobre el select
+    if (texto3 != t3) {      // si se ha modificado el texto ...
       valor_nuevo = valor3;
       texto_nuevo = t3;
       nivel = 3;
@@ -184,7 +212,7 @@ function leeSelectCategorias() {
       valor2 = document.getElementById("Tipo2N").options[i2].value;
       texto2 = document.getElementById("Tipo2N").options[i2].text;
           t2 = document.getElementById("tTipo2N").value;
-      if (texto2 != t2) {
+      if (texto2 != t2) {     // si se ha modificado el texto ...
         valor_nuevo = valor2;
         texto_nuevo = t2;
         nivel = 2;
@@ -194,7 +222,7 @@ function leeSelectCategorias() {
         valor1 = document.getElementById("Tipo1N").options[i1].value;
         texto1 = document.getElementById("Tipo1N").options[i1].text;
             t1 = document.getElementById("tTipo1N").value;
-        if (texto1 != t1) {
+        if (texto1 != t1) {     // si se ha modificado el texto ...
           valor_nuevo = valor1;
           texto_nuevo = t1;
           nivel = 1;
@@ -212,7 +240,63 @@ function leeSelectCategorias() {
 
   return;
 }
+/////////////////////////////////////////////////////////////////////////////
 
+
+/* ----------------------------------------------------------
+* leeSelectCategorias()
+* Se comprueba:
+* 1. Qué valores se seleccionaron en las listas desplegables (selectedIndex >= 0)
+* 2. Si se modificó la casilla con respecto el valor original, en cuyo caso se considera
+*    que se crea una nueva categoría
+* -----------------------------------------------------------
+*/
+function leeEstadoCategoria3() {
+
+  var i3 = document.getElementById("Tipo3N").selectedIndex;
+  
+  var valor3, valor_nuevo;
+  var texto3, texto_nuevo;
+  var t3;
+  var prede, nivel;
+
+  if (i3 == -1) {
+    t3 = document.getElementById("tTipo3N").value;
+    t3 = t2.trim();    
+    if (t3 != "") {          // nueva categoría en nivel 3    
+      valor_nuevo = valor3;
+      texto_nuevo = t3;
+      nivel = 3;
+    } else {
+
+    }
+    return;
+  }
+
+  if (i3>=0) {
+    valor3 = document.getElementById("Tipo3N").options[i3].value;
+    texto3 = document.getElementById("Tipo3N").options[i3].text;  // texto select
+        t3 = document.getElementById("tTipo3N").value;            //input text sobre el select
+    if (texto3 != t3) {      // si se ha modificado el texto ...
+      valor_nuevo = valor3;
+      texto_nuevo = t3;
+      nivel = 3;
+    }
+  }
+
+  document.getElementById("id_categoria_e").value = valor_nuevo;
+  document.getElementById("id_categoria_c").value = valor_nuevo;
+  document.getElementById("titulo_c").value = texto_nuevo;
+  document.getElementById("nivel_c").value = nivel;
+  document.getElementById("prede_c").value = prede;
+
+  return;
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
 function nuevoEnlace(idform) {
   leeSelectCategorias();
   document.getElementById(idForm).action = "/enlaces/add/";
