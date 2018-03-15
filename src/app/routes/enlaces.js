@@ -135,7 +135,7 @@ module.exports = app => {
 	////////////////////////////////////////////////////////////////////////////
 
 	app.post('/enlaces/add', (req, res) => {
-		const {title, news} = req.body;
+		//const {title, news} = req.body;
 		/*
 		connection.query('INSERT INTO news SET?', {title, news}, (err, result) => {
 				res.redirect('/enlaces/list');

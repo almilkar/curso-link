@@ -70,6 +70,7 @@
         </div> <!-- 1 col   Table end -->
 
         <div class="col mt-2">      <!-- 2 col   Ini Formulario -->
+          <!-- Ini Formulario: idFormEnlaces -->
           <form method="get" id="idFormEnlaces" class="form-control">
             <h5 id="tituloOperacion" class="text-right">Add a link</h5>
             <input type="hidden" name="id_enlace_e" id="id_enlace_e" class="form-control" readonly>
@@ -163,9 +164,9 @@
               <!--                                     -->
               <div class="row mt-1 border-bottom">
                 <div class="col-sm-12">
-                  <input type="button" value="New Link" onclick="nuevoEnlace()" 
+                  <input type="button" value="New Link" onclick="nuevoEnlace('idFormEnlaces')" 
                     class="btn btn-default">
-                  <input type="button" value="Update Link" onclick="modificaEnlace()" 
+                  <input type="button" value="Update Link" onclick="modificaEnlace('idFormEnlaces')" 
                     class="btn btn-default">
                   <input type="button" value="Clear" 
                     onclick="limpiaformsEnlace(['idFormEnlaces','idFormCategorias'])" 

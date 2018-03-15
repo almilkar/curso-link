@@ -213,7 +213,7 @@ function leeSelectCategorias() {
   return;
 }
 
-function nuevoEnlace(idForm) {
+function nuevoEnlace(idform) {
   leeSelectCategorias();
   document.getElementById(idForm).action = "/enlaces/add/";
   document.getElementById(idForm).method = "POST";
@@ -233,5 +233,6 @@ function limpiaformsEnlace(forms) {
     var x = document.getElementById(formulario);
     x.reset();
   })
+  vaciaDD(["Tipo1N","Tipo2N","Tipo3N"]);
 }
 
