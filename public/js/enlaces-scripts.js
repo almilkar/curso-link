@@ -51,8 +51,15 @@ function recuperaCategorias(idCategoria) {
   xhttp.send();
 }
 ///////////////////////////////////////////////////////////////////////
-function recuperaCategoriasSiguientes(idCategoria, nivel) {
+function recuperaCategoriasSiguientes(cadCategoria, nivel) {
+  var idCategoria;
   var objDato = {};
+
+  if ((cadCategoria == "") || (cadCategoria == undefined)) return false;
+  var arrCat = cadCategoria.split("|", 3);
+  if (arrCat.length != 3) return false;
+  idCategoria = arrCat[0];
+  
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -79,33 +86,24 @@ function recuperaCategoriasSiguientes(idCategoria, nivel) {
 function expandeCategoria(selectorCategoria, nivelaqui) {
   
   var url, arrCat, idCategoria, nivel, prede;
-
-
   var selCat = document.getElementById(selectorCategoria);
   var strCat = selCat.value;
 
-  if ((strCat == "") || (strCat == undefined)) {
-    if (nivelaqui == 1) {
-      url = "/enlaces/idcatexgen/";  
-    } else {
-      //url = "/enlaces/idcatex/" + idCategoria;
-      return false;
-    }
+  url = "";
+  if (nivelaqui == 1) {
+    url = "/enlaces/idcatexgen/";
   } else {
     arrCat = strCat.split("|");
     if (arrCat.length == 3) {
       idCategoria = arrCat[0];
       nivel = arrCat[1];
       prede = arrCat[2];
-      if (nivelaqui == 1) {
-        url = "/enlaces/idcatexgen/";  
-      } else {
-        //url = "/enlaces/idcatex/" + idCategoria;
-        return false;
-      }
-    }   
-  } 
+      url = "/enlaces/idcatex/" + idCategoria;
+    }
+  }
+  if (url == "") return false;
 
+  // --- ---- ---- ----- ---- ------ ------ ------ ------ 
   var objDato = {};
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -303,7 +301,6 @@ function nuevoEnlace(idform) {
   document.getElementById(idForm).method = "POST";
   document.getElementById(idForm).submit();
 }
-
 function modificaEnlace(idForm) {
   leeSelectCategorias();
   var idEnlace = document.getElementById('id_enlace_e').value;
@@ -311,7 +308,6 @@ function modificaEnlace(idForm) {
   document.getElementById(idForm).method = "POST";
   document.getElementById(idForm).submit();
 }
-
 function limpiaformsEnlace(forms) {
   forms.forEach(formulario => {
     var x = document.getElementById(formulario);

@@ -64,9 +64,25 @@ module.exports = app => {
 	*/
 	
 	app.get('/enlaces/idcatexgen',  (req, res) => {
-		var idcat = req.params.idcat;
+		//var idcat = req.params.idcat;
 		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
 			' AND nivel_c = 1';
+		connection.query(sqlq, (err,result) => {
+				res.send(result);
+		});
+	});
+
+	/*	----------------------------------------------------------------
+		* 	/enlaces/idcatex/:idcat
+		* 	Recupera todas las categorías del nivel seleccionado para un predecesor
+		* 	Método para ajax
+		----------------------------------------------------------------
+	*/
+	
+	app.get('/enlaces/idcatex/:idprede',  (req, res) => {
+		var prede = req.params.idprede;
+		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
+			' AND prede_c = ' + connection.escape(prede);
 		connection.query(sqlq, (err,result) => {
 				res.send(result);
 		});
