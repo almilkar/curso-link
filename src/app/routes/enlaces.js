@@ -9,8 +9,8 @@ module.exports = app => {
 	var idUsuario = 2;
 
 	app.use('/enlaces/*', function (req, res, next) {
-  	console.log('Solicitud recibida Time:', Date.now(),' => ' + req.toString());
-  	next();
+  		console.log('Solicitud recibida Time:', Date.now(),' => ' + req.toString());
+  		next();
 	});
 
 	/*	---------------------------------------------------------------
@@ -18,6 +18,7 @@ module.exports = app => {
 		*
 	*/
 	app.get('/enlaces/list', leeEnlaces, renderEnlacesPagina);
+
 	function leeEnlaces(req, res, next) {
 		/*
 		if (res.query) {
@@ -78,7 +79,7 @@ module.exports = app => {
 		* 	Método para ajax
 		----------------------------------------------------------------
 	*/
-	app.get('/enlaces/idcatex/:idprede',  (req, res) => {
+	app.get('/enlaces/idcatex/:idprede', (req, res) => {
 		var prede = req.params.idprede;
 		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
 			' AND prede_c = ' + connection.escape(prede);
@@ -147,7 +148,8 @@ module.exports = app => {
 	////////////////////////////////////////////////////////////////////////////
 
 	app.post('/enlaces/addcat', (req, res) => {
-		console.log(req.body);
+		console.log(req);
+		console.log("25");
 		//const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
 		//connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
 		//	[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)

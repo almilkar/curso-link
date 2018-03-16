@@ -181,8 +181,7 @@ function tomaSeleccion(idDD) {
 function grabaCategoria(datosCategoria) {
   var xhr = new XMLHttpRequest();
   var url = "/enlaces/addcat";
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/json");
+  //xhr.setRequestHeader("Content-type", "application/json");
   xhr.onreadystatechange = function () { 
     if (xhr.readyState == 4 && xhr.status == 200) {
         //var json = JSON.parse(xhr.responseText);
@@ -191,6 +190,7 @@ function grabaCategoria(datosCategoria) {
     }
   }
   var data = JSON.stringify({"email":"tomb@raider.com","name":"LaraCroft"});
+  xhr.open("POST", url, true);
   xhr.send(data);
 }
 
@@ -222,7 +222,7 @@ function leeSelectCategorias() {
     
     if (titulo_c != t) {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
-      ultimoIdCatN1 = grabaCategoria({nivel_c, titulo_c, id_usuario_c, prede_c});                        
+      ultimoIdCatN1 = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }                         //  y si no, siguen las comprobaciones
   }
 
@@ -260,11 +260,11 @@ function leeSelectCategorias() {
     }                         //  y si no, siguen las comprobaciones
   }  
 
-  document.getElementById("id_categoria_e").value = valor_nuevo;
-  document.getElementById("id_categoria_c").value = valor_nuevo;
-  document.getElementById("titulo_c").value = texto_nuevo;
-  document.getElementById("nivel_c").value = nivel;
-  document.getElementById("prede_c").value = prede;
+  document.getElementById("id_categoria_e").value = "";
+  document.getElementById("id_categoria_c").value = "";
+  document.getElementById("titulo_c").value = "";
+  document.getElementById("nivel_c").value = nivel_c;
+  document.getElementById("prede_c").value = prede_c;
 
   return;
 }
@@ -322,7 +322,7 @@ function leeEstadoCategoria3() {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-function nuevoEnlace(idform) {
+function nuevoEnlace(idForm) {
   leeSelectCategorias();
   document.getElementById(idForm).action = "/enlaces/add/";
   document.getElementById(idForm).method = "POST";
