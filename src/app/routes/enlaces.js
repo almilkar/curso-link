@@ -78,7 +78,6 @@ module.exports = app => {
 		* 	Método para ajax
 		----------------------------------------------------------------
 	*/
-	
 	app.get('/enlaces/idcatex/:idprede',  (req, res) => {
 		var prede = req.params.idprede;
 		var sqlq = 'SELECT * FROM categorias WHERE id_usuario_c = ' + connection.escape(idUsuario) +
@@ -147,15 +146,25 @@ module.exports = app => {
 	};
 	////////////////////////////////////////////////////////////////////////////
 
+	app.post('/enlaces/addcat', (req, res) => {
+		console.log(req.body);
+		//const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
+		//connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
+		//	[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)
+
+		res.send("25");
+	});
+
+
+
 	app.post('/enlaces/add', (req, res) => {
-		//const {title, news} = req.body;
 		/*
-		connection.query('INSERT INTO news SET?', {title, news}, (err, result) => {
-				res.redirect('/enlaces/list');
-			});
-			*/
-			res.send(req.body);
-			//res.redirect('/enlaces/list');
+		const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
+		connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
+			[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)
+
+		res.send(req.body);
+		*/
 	});
 
 	app.post('/enlaces/upd', (req, res) => {
@@ -176,4 +185,9 @@ module.exports = app => {
 	});
 
 
-}
+}    /////  END END END 
+
+
+
+//INSERT INTO tbl (auto,text) VALUES(NULL,'text');
+//INSERT INTO tbl2 (id,text) VALUES(LAST_INSERT_ID(),'text');

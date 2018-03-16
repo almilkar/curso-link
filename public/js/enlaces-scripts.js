@@ -176,59 +176,89 @@ function tomaSeleccion(idDD) {
   var texto = elem.options[elem.selectedIndex].text;
   return texto;
 }
+/////////////////////////////////////////////////////////////////////
 
+function grabaCategoria(datosCategoria) {
+  var xhr = new XMLHttpRequest();
+  var url = "/enlaces/addcat";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json");
+  xhr.onreadystatechange = function () { 
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        //var json = JSON.parse(xhr.responseText);
+        console.log(xhr.responseText);
+        return xhr.responseText;
+    }
+  }
+  var data = JSON.stringify({"email":"tomb@raider.com","name":"LaraCroft"});
+  xhr.send(data);
+}
+
+/////////////////////////////////////////////////////////////////////
 /* ----------------------------------------------------------
 * leeSelectCategorias()
 * Se comprueba:
 * 1. Qué valores se seleccionaron en las listas desplegables (selectedIndex >= 0)
 * 2. Si se modificó la casilla con respecto el valor original, en cuyo caso se considera
 *    que se crea una nueva categoría
+* 3. Si el nivel 1 es nuevo, 2 y 3 tambien los son.
+* 4. Si el nivel 1 no es nuevo, comprobar el nivel 2
+* 5. Si el nivel 2 no es nuevo, comprobar el nivel 3
 * -----------------------------------------------------------
 */
 function leeSelectCategorias() {
+  var id_usuario_c = 2;
 
-  var i3 = document.getElementById("Tipo3N").selectedIndex;
-  var i2 = document.getElementById("Tipo2N").selectedIndex;
   var i1 = document.getElementById("Tipo1N").selectedIndex;
-
-  var valor3, valor2, valor1, valor_nuevo;
-  var texto3, texto2, texto1, texto_nuevo;
-  var t3, t2, t1
-  var prede, nivel;
-
-  if (i3>=0) {
-    valor3 = document.getElementById("Tipo3N").options[i3].value;
-    texto3 = document.getElementById("Tipo3N").options[i3].text;  // texto select
-        t3 = document.getElementById("tTipo3N").value;            //input text sobre el select
-    if (texto3 != t3) {      // si se ha modificado el texto ...
-      valor_nuevo = valor3;
-      texto_nuevo = t3;
-      nivel = 3;
-    }
-  } else {
-    if (i2>=0) {
-      valor2 = document.getElementById("Tipo2N").options[i2].value;
-      texto2 = document.getElementById("Tipo2N").options[i2].text;
-          t2 = document.getElementById("tTipo2N").value;
-      if (texto2 != t2) {     // si se ha modificado el texto ...
-        valor_nuevo = valor2;
-        texto_nuevo = t2;
-        nivel = 2;
-      }
-    } else {
-      if (i1>=0) {
-        valor1 = document.getElementById("Tipo1N").options[i1].value;
-        texto1 = document.getElementById("Tipo1N").options[i1].text;
-            t1 = document.getElementById("tTipo1N").value;
-        if (texto1 != t1) {     // si se ha modificado el texto ...
-          valor_nuevo = valor1;
-          texto_nuevo = t1;
-          nivel = 1;
-          prede = 0;
-        }
-      }
-    }
+  if (i1>=0) {   // Seleccion dentro de la lista actual
+       valor = document.getElementById("Tipo1N").options[i1].value;
+    titulo_c = document.getElementById("Tipo1N").options[i1].text;
+           t = document.getElementById("tTipo1N").value;
+    // bloque de datos para agregar al registro de nuevo enlace
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    nivel_c = arrValor[1];
+    prede_c = arrValor[2];
+    
+    if (titulo_c != t) {     // Se ha modificado el texto ...
+      titulo_c = t;          //  Hay que grabar esta categoria
+      ultimoIdCatN1 = grabaCategoria({nivel_c, titulo_c, id_usuario_c, prede_c});                        
+    }                         //  y si no, siguen las comprobaciones
   }
+
+  var i2 = document.getElementById("Tipo2N").selectedIndex; 
+  if (i2>=0) {   // Seleccion dentro de la lista actual
+       valor = document.getElementById("Tipo2N").options[i2].value;
+    titulo_c = document.getElementById("Tipo2N").options[i2].text;
+           t = document.getElementById("tTipo2N").value;
+    // bloque de datos para agregar al registro de nuevo enlace
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    nivel_c = arrValor[1];
+    prede_c = arrValor[2];
+    
+    if (titulo_c != t) {     // Se ha modificado el texto ...
+      titulo_c = t;          //  Hay que grabar esta categoria
+      ultimoIdCatN2 = grabaCategoria({nivel_c, titulo_c, id_usuario_c, prede_c});                        
+    }                         //  y si no, siguen las comprobaciones
+  }
+
+  var i3 = document.getElementById("Tipo3N").selectedIndex;  
+  if (i3>=0) {   // Seleccion dentro de la lista actual
+       valor = document.getElementById("Tipo3N").options[i3].value;
+    titulo_c = document.getElementById("Tipo3N").options[i3].text;
+           t = document.getElementById("tTipo3N").value;
+    // bloque de datos para agregar al registro de nuevo enlace
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    nivel_c = arrValor[1];
+    prede_c = arrValor[2];
+    
+    if (titulo_c != t) {     // Se ha modificado el texto ...
+      titulo_c = t;          //  Hay que grabar esta categoria
+      ultimoIdCatN3 = grabaCategoria({nivel_c, titulo_c, id_usuario_c, prede_c});                        
+    }                         //  y si no, siguen las comprobaciones
+  }  
 
   document.getElementById("id_categoria_e").value = valor_nuevo;
   document.getElementById("id_categoria_c").value = valor_nuevo;
@@ -290,9 +320,6 @@ function leeEstadoCategoria3() {
 
   return;
 }
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////
 function nuevoEnlace(idform) {
