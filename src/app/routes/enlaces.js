@@ -147,9 +147,9 @@ module.exports = app => {
 	};
 	////////////////////////////////////////////////////////////////////////////
 
-	app.post('/enlaces/addcat', (req, res) => {
-		console.log(req);
-		console.log("25");
+	app.post('/enlaces/addcat/:datoscategoria', (req, res) => {
+		console.log(req.params.datoscategoria);
+		
 		//const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
 		//connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
 		//	[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)
