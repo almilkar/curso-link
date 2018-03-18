@@ -147,26 +147,29 @@ module.exports = app => {
 	};
 	////////////////////////////////////////////////////////////////////////////
 
-	app.post('/enlaces/addcat/:datoscategoria', (req, res) => {
-		console.log(req.params.datoscategoria);
+	app.post('/enlaces/addcat', (req, res) => {
 		
-		//const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
-		//connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
-		//	[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)
+		const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
 
-		res.send("25");
-	});
+		//res.send("2");
+		
+		connection.query('INSERT INTO categorias SET ?', {nivel_c, titulo_c, id_usuario_c, prede_c}, (err, result) => {
+				if (!err) {
+					connection.query('SELECT LAST_INSERT_ID() AS id;',	(err, result) => {
+							console.log(result);
+							res.send(result);		
+						});
+				} else {
+					console.log(err);
+					//res.end();
+				}
+			});
+		});
 
 
 
 	app.post('/enlaces/add', (req, res) => {
-		/*
-		const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
-		connection.query('INSERT INTO categorias (nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c) VALUES ?', 
-			[{nivel_c, titulo_c, descripcion_c, id_usuario_c, prede_c}], (err, result) =>)
-
-		res.send(req.body);
-		*/
+		
 	});
 
 	app.post('/enlaces/upd', (req, res) => {
