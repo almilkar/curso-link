@@ -130,6 +130,7 @@ function expandeCategoria(selectorCategoria, nivelaqui) {
 }
 ////////////////////////////////////////////////////////////
 function creaDD(dato, iSelector, blanco) {
+  var option;
   var dd = document.getElementById(iSelector);  // dropdown
   dd.length = 0;
   if (blanco == true) {
@@ -139,7 +140,7 @@ function creaDD(dato, iSelector, blanco) {
   }
   
   for (var i = 0; i < dato.length; i++) {
-    var option = document.createElement('option');
+    option = document.createElement('option');
     var cat = dato[i].id_categoria_c;
     var niv = dato[i].nivel_c;
     var pre = dato[i].prede_c;
@@ -161,6 +162,11 @@ function creaDD(dato, iSelector, blanco) {
     //dd.add(option);
     document.getElementById("t" + iSelector).value = "";
   }
+
+  option = document.createElement('option');
+  option.value = ""; option.text = "";
+  dd.add(option);
+
 }
 /////////////////////////////////////////////////////////////////////
 function vaciaDD(dds) {
@@ -172,8 +178,12 @@ function vaciaDD(dds) {
 /////////////////////////////////////////////////////////////////////
 function tomaSeleccion(idDD) {
   var elem = document.getElementById(idDD);
+
+  if (elem.options.length == 0) return "";
+
   var valor = elem.options[elem.selectedIndex].value;
   var texto = elem.options[elem.selectedIndex].text;
+  //document.getElementById("t" + idDD).value = texto;
   return texto;
 }
 /////////////////////////////////////////////////////////////////////
@@ -198,11 +208,37 @@ function grabaCategoria(datosCategoria) {
 
 /////////////////////////////////////////////////////////////////////
 
+function grabaCategoriaNN(idTipoN) {
+  var id_usuario_c = "2";
+  var valor = "";
+  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
+  var i = document.getElementById(idTipoN).selectedIndex;
+
+  if (i>=0) valor = document.getElementById(idTipoN).options[i].value;
+
+  if (i>=0 && valor.trim() != "") {   // Existe una seleccion dentro de la lista actual
+       
+    titulo_c = document.getElementById(idTipoN).options[i].text;
+           t = document.getElementById("t" + idTipoN).value;
+    // bloque de datos para agregar al registro de nuevo enlace
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    
+    if (titulo_c != t) {     // Se ha modificado el texto ...
+      titulo_c = t;          //  Hay que grabar esta categoria
+      ultimoId = modificaTituloCategoria({"titulo_c": titulo_c, "id_categoria_c": id_categoria_c});                        
+    }                         //  y si no, siguen las comprobaciones
+
+  }
+}
+/////////////////////////////////////////////////////////////////////
 function grabaCategoriaN1() {
   var id_usuario_c = "2";
+  var valor = "";
   var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
   var i = document.getElementById("Tipo1N").selectedIndex;
-  var valor = document.getElementById("Tipo1N").options[i].value;
+
+  if (i>=0) valor = document.getElementById("Tipo1N").options[i].value;
 
   if (i>=0 && valor.trim() != "") {   // Existe una seleccion dentro de la lista actual
        
@@ -229,14 +265,29 @@ function grabaCategoriaN1() {
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
-  return false;
+  return true;
 }
 // ----
 function grabaCategoriaN2() {
   var id_usuario_c = "2";
-  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
-  var i = document.getElementById("Tipo2N").selectedIndex;
-  var valor = document.getElementById("Tipo2N").options[i].value;
+  var valor = "";
+  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c, prede_sup;
+
+  // Sin datos del predecesor de N1 no podríamos grabar la categoría de N2
+  var i = document.getElementById("Tipo1N").selectedIndex;
+  valor = document.getElementById("Tipo1N").options[i].value;
+  if (i>=0 && valor.trim() != "") {
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    prede_sup = id_categoria_c;
+    valor = ""; arrValor = [];
+  } else {
+    return false;     // sin datos del predecesor
+  }
+
+  // Buscamos datos del desplegable actual
+  i = document.getElementById("Tipo2N").selectedIndex;
+  if (i>=0) valor = document.getElementById("Tipo2N").options[i].value;
 
   if (i>=0 && valor.trim() != "") {   // Existe una seleccion dentro de la lista actual
        
@@ -258,21 +309,36 @@ function grabaCategoriaN2() {
     if (t.trim() != "") {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
       nivel_c = "2";
-      //prede_c = "0";
+      prede_c = prede_sup;
       ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
-  return false;
+  return true;
 }
 
 // ----
-// ----
+
 function grabaCategoriaN3() {
   var id_usuario_c = "2";
-  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
-  var i = document.getElementById("Tipo3N").selectedIndex;
-  var valor = document.getElementById("Tipo3N").options[i].value;
+  var valor = "";
+  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c, prede_sup;
+  
+  // Sin datos del predecesor de N1 no podríamos grabar la categoría de N2
+  var i = document.getElementById("Tipo2N").selectedIndex;
+  valor = document.getElementById("Tipo2N").options[i].value;
+  if (i>=0 && valor.trim() != "") {
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    prede_sup = id_categoria_c;
+    valor = ""; arrValor = [];
+  } else {
+    return false;     // sin datos del predecesor
+  }
+
+  // Buscamos datos del desplegable actual
+  i = document.getElementById("Tipo3N").selectedIndex;
+  if (i>=0) valor = document.getElementById("Tipo3N").options[i].value;
 
   if (i>=0 && valor.trim() != "") {   // Existe una seleccion dentro de la lista actual
        
@@ -294,12 +360,12 @@ function grabaCategoriaN3() {
     if (t.trim() != "") {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
       nivel_c = "3";
-      //prede_c = "0";
+      prede_c = prede_sup;
       ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
-  return false;
+  return true;
 }
 
 // ----

@@ -167,6 +167,18 @@ module.exports = app => {
 		});
 
 
+	app.post('/enlaces/updcat', (req, res) => {
+		
+		const {titulo_c, id_categoria_c} = req.body;
+		
+		connection.query('UPDATE TABLE categorias SET ? WHERE id_categoria_c = ?', 
+			[{titulo_c},{}] (err, result) => {
+					if (err) throw err;
+    				console.log(result.affectedRows + " record(s) updated");
+				});
+	});
+
+
 
 	app.post('/enlaces/add', (req, res) => {
 		
