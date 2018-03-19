@@ -171,9 +171,10 @@ module.exports = app => {
 		
 		const {titulo_c, id_categoria_c} = req.body;
 		
-		connection.query('UPDATE TABLE categorias SET ? WHERE id_categoria_c = ?', 
-			[{titulo_c},{}] (err, result) => {
+		connection.query('UPDATE categorias SET ? WHERE ?', 
+			[{titulo_c},{id_categoria_c}], (err, result) => {
 					if (err) throw err;
+					res.send(id_categoria_c);
     				console.log(result.affectedRows + " record(s) updated");
 				});
 	});

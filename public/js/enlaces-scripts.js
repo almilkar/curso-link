@@ -183,12 +183,19 @@ function tomaSeleccion(idDD) {
 
   var valor = elem.options[elem.selectedIndex].value;
   var texto = elem.options[elem.selectedIndex].text;
-  //document.getElementById("t" + idDD).value = texto;
+
+  if (valor == "") {
+    document.getElementById("t" + idDD).value = "";
+  } else {
+    document.getElementById("t" + idDD).value = texto;    
+  }
+
+  document.getElementById("t" + idDD).value = texto;
   return texto;
 }
 /////////////////////////////////////////////////////////////////////
 
-function grabaCategoria(datosCategoria) {
+function sqlInsertCategoria(datosCategoria) {
   var xhr = new XMLHttpRequest();
   var data = JSON.stringify(datosCategoria);
   var url = "/enlaces/addcat";
@@ -208,7 +215,23 @@ function grabaCategoria(datosCategoria) {
 
 /////////////////////////////////////////////////////////////////////
 
-function grabaCategoriaNN(idTipoN) {
+function sqlUpdateCategoria(datosCategoria) {
+  var xhr = new XMLHttpRequest();
+  var data = JSON.stringify(datosCategoria);
+  var url = "/enlaces/updcat";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  xhr.onreadystatechange = function () { 
+    if (this.readyState == 4 && this.status == 200) {
+      var id_categoria_c = this.responseText;
+      recuperaCategorias(id_categoria_c);
+    }
+  }
+  xhr.send(data);
+}
+
+/////////////////////////////////////////////////////////////////////
+function modificaTituloCategoriaNN(idTipoN) {
   var id_usuario_c = "2";
   var valor = "";
   var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
@@ -226,7 +249,7 @@ function grabaCategoriaNN(idTipoN) {
     
     if (titulo_c != t) {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
-      ultimoId = modificaTituloCategoria({"titulo_c": titulo_c, "id_categoria_c": id_categoria_c});                        
+      ultimoId = sqlUpdateCategoria({"titulo_c": titulo_c, "id_categoria_c": id_categoria_c});                        
     }                         //  y si no, siguen las comprobaciones
 
   }
@@ -252,7 +275,7 @@ function grabaCategoriaN1() {
     
     if (titulo_c != t) {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }                         //  y si no, siguen las comprobaciones
   } else {      // Si no existe selección
@@ -261,7 +284,7 @@ function grabaCategoriaN1() {
       titulo_c = t;          //  Hay que grabar esta categoria
       nivel_c = "1";
       prede_c = "0";
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
@@ -301,7 +324,7 @@ function grabaCategoriaN2() {
     
     if (titulo_c != t) {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }                         //  y si no, siguen las comprobaciones
   } else {      // Si no existe selección
@@ -310,7 +333,7 @@ function grabaCategoriaN2() {
       titulo_c = t;          //  Hay que grabar esta categoria
       nivel_c = "2";
       prede_c = prede_sup;
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
@@ -352,7 +375,7 @@ function grabaCategoriaN3() {
     
     if (titulo_c != t) {     // Se ha modificado el texto ...
       titulo_c = t;          //  Hay que grabar esta categoria
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }                         //  y si no, siguen las comprobaciones
   } else {      // Si no existe selección
@@ -361,7 +384,7 @@ function grabaCategoriaN3() {
       titulo_c = t;          //  Hay que grabar esta categoria
       nivel_c = "3";
       prede_c = prede_sup;
-      ultimoId = grabaCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
+      ultimoId = sqlInsertCategoria({"nivel_c": nivel_c, "titulo_c": titulo_c, 
                                       "id_usuario_c": id_usuario_c, "prede_c": prede_c});                        
     }
   }
