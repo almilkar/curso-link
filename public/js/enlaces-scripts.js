@@ -1,4 +1,5 @@
 ﻿window.onload = function() {
+  expandeCategoria("Tipo1N", 1)
 //document.getElementById("title").focus();
 };
 //
@@ -27,19 +28,19 @@ function recuperaCategorias(idCategoria) {
     if (this.readyState == 4 && this.status == 200) {
       objDato = JSON.parse(this.responseText);
       if (objDato.categorias1N != undefined) {
-        creaDD(objDato.categorias1N, "Tipo1N", false);
+        creaDDunElemento(objDato.categorias1N, "Tipo1N", false);
       } else {
         document.getElementById("Tipo1N").length = 0;
         document.getElementById("tTipo1N").value = "";
       }
       if (objDato.categorias2N != undefined) {
-        creaDD(objDato.categorias2N, "Tipo2N", false);
+        creaDDunElemento(objDato.categorias2N, "Tipo2N", false);
       } else {
         document.getElementById("Tipo2N").length = 0;
         document.getElementById("tTipo2N").value = "";
       }
       if (objDato.categorias3N != undefined) {
-        creaDD(objDato.categorias3N, "Tipo3N", false);
+        creaDDunElemento(objDato.categorias3N, "Tipo3N", false);
       } else {
         document.getElementById("Tipo3N").length = 0;
         document.getElementById("tTipo3N").value = "";
@@ -50,12 +51,76 @@ function recuperaCategorias(idCategoria) {
   xhttp.open("GET", url, true);
   xhttp.send();
 }
+/////////////////////////////////////////////////////////////////////
+function creaDDunElemento(dato, iSelector) {
+  var option;
+  var dd = document.getElementById(iSelector);  // dropdown
+  dd.length = 0;
+  
+  for (var i = 0; i < dato.length; i++) {
+    option = document.createElement('option');
+    var cat = dato[i].id_categoria_c;
+    var niv = dato[i].nivel_c;
+    var pre = dato[i].prede_c;
+
+    option.value = cat + "|" + niv + "|" + pre;
+    option.text = dato[i].titulo_c;
+    dd.add(option);
+  }
+
+  document.getElementById("t" + iSelector).value = option.text;
+}
+/////////////////////////////////////////////////////////////////////
+function tomaSeleccionSimple(idDD) {
+  var elem = document.getElementById(idDD);
+
+  if (elem.options.length == 0) return "";
+
+  var valor = elem.options[elem.selectedIndex].value;
+  var texto = elem.options[elem.selectedIndex].text;
+
+  if (valor == "") {
+    document.getElementById("t" + idDD).value = "";
+  } else {
+    document.getElementById("t" + idDD).value = texto;    
+  }
+
+  return texto;
+}
+///////////////////////////////////////////////////////////////////////
+function tomaSeleccion(idDD) {
+  var elem = document.getElementById(idDD);
+
+  if (elem.options.length == 0) return "";
+
+  var valor = elem.options[elem.selectedIndex].value;
+  var texto = elem.options[elem.selectedIndex].text;
+
+  var arrCat = valor.split("|", 3);
+  if (arrCat.length != 3) return "";
+  var nivel_siguiente = Number(arrCat[1]) + 1;
+
+  if (valor == "") {
+    document.getElementById("t" + idDD).value = "";
+  } else {
+    document.getElementById("t" + idDD).value = texto;    
+  }
+
+  if ((nivel_siguiente > 0) && (nivel_siguiente <= 3))
+    recuperaCategoriasSiguientes(valor, nivel_siguiente);
+
+  return texto;
+}
+
 ///////////////////////////////////////////////////////////////////////
 function recuperaCategoriasSiguientes(cadCategoria, nivel) {
   var idCategoria;
   var objDato = {};
 
-  if ((cadCategoria == "") || (cadCategoria == undefined)) return false;
+  if ((cadCategoria == "") || (cadCategoria == undefined)) {
+    document.getElementById(cadCategoria).value = "";
+    return false;
+  }
   var arrCat = cadCategoria.split("|", 3);
   if (arrCat.length != 3) return false;
   idCategoria = arrCat[0];
@@ -133,11 +198,16 @@ function creaDD(dato, iSelector, blanco) {
   var option;
   var dd = document.getElementById(iSelector);  // dropdown
   dd.length = 0;
+  document.getElementById("t" + iSelector).value = "";
+  /*
   if (blanco == true) {
-    //option = document.createElement('option');
-    //dd.add(option);
     document.getElementById("t" + iSelector).value = "";
   }
+  */
+
+  option = document.createElement('option');
+  option.value = ""; option.text = "";
+  dd.add(option);
   
   for (var i = 0; i < dato.length; i++) {
     option = document.createElement('option');
@@ -150,6 +220,7 @@ function creaDD(dato, iSelector, blanco) {
     dd.add(option);
   }
 
+  /*
   dd.selectedIndex = 0;
 
   if (i==0) {
@@ -162,10 +233,9 @@ function creaDD(dato, iSelector, blanco) {
     //dd.add(option);
     document.getElementById("t" + iSelector).value = "";
   }
+  */
 
-  option = document.createElement('option');
-  option.value = ""; option.text = "";
-  dd.add(option);
+  
 
 }
 /////////////////////////////////////////////////////////////////////
@@ -175,24 +245,7 @@ function vaciaDD(dds) {
     document.getElementById("t" + dds[i]).value = "";
   }
 }
-/////////////////////////////////////////////////////////////////////
-function tomaSeleccion(idDD) {
-  var elem = document.getElementById(idDD);
 
-  if (elem.options.length == 0) return "";
-
-  var valor = elem.options[elem.selectedIndex].value;
-  var texto = elem.options[elem.selectedIndex].text;
-
-  if (valor == "") {
-    document.getElementById("t" + idDD).value = "";
-  } else {
-    document.getElementById("t" + idDD).value = texto;    
-  }
-
-  document.getElementById("t" + idDD).value = texto;
-  return texto;
-}
 /////////////////////////////////////////////////////////////////////
 
 function sqlInsertCategoria(datosCategoria) {
@@ -394,7 +447,7 @@ function grabaCategoriaN3() {
 // ----
 function nuevoEnlace(idForm) {
   if (leeSelectCategorias()) {
-    document.getElementById(idForm).action = "/enlaces/add/";
+    document.getElementById(idForm).action = "/enlaces/addenlace";
     document.getElementById(idForm).method = "POST";
     document.getElementById(idForm).submit();
   }
@@ -403,7 +456,7 @@ function nuevoEnlace(idForm) {
 function modificaEnlace(idForm) {
   if (leeSelectCategorias()) {
     var idEnlace = document.getElementById('id_enlace_e').value;
-    document.getElementById(idForm).action = "/enlaces/upd/" + idEnlace;
+    document.getElementById(idForm).action = "/enlaces/updenlace/" + idEnlace;
     document.getElementById(idForm).method = "POST";
     document.getElementById(idForm).submit();
   }

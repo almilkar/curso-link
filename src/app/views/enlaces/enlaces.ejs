@@ -93,6 +93,7 @@
               <input type="hidden" name="prede_c" id="prede_c">
             </div>
           </form>
+          <!-- onchange = "this.nextElementSibling.value = tomaSeleccion('Tipo1N');" -->
           <form id="idFormCategorias">
               <label>Tree of Categories</label>
               <!-- Select para cargar categorias nivel 1 -->
@@ -100,8 +101,8 @@
                 <div class="col-sm-6">
                   <div id="div1N" class="select-editable">
             		      <select id="Tipo1N" name="Tipo1N"
-                        onclick="{this.nextElementSibling.value = tomaSeleccion('Tipo1N');
-                                recuperaCategoriasSiguientes(this.value, 2)}">
+                        onchange = "tomaSeleccion('Tipo1N');"
+                      >
                         <option></option>
             		      </select>
                       <input type="text" name="tTipo1N" id="tTipo1N" value="">
@@ -124,8 +125,8 @@
                 <div class="col-sm-6">
             	    <div id="divDD2N" class="select-editable">
             		    <select  id="Tipo2N" name="Tipo2N"
-                       onclick="{this.nextElementSibling.value = tomaSeleccion('Tipo2N');
-                              recuperaCategoriasSiguientes(this.value, 3)}">
+                      onchange = "tomaSeleccion('Tipo2N');" 
+                    >
                       <option></option>
                     </select>
                     <input type="text" name="tTipo2N" id="tTipo2N" value="">
@@ -147,8 +148,9 @@
               <div class="row mt-1 border-bottom">
                 <div class="col-sm-6">
             	      <div id="divDD3N" class="select-editable">
-            		       <select id="Tipo3N" name="Tipo3N" 
-                          onclick="{this.nextElementSibling.value = tomaSeleccion('Tipo3N');}">
+            		        <select id="Tipo3N" name="Tipo3N"
+                          onchange = "tomaSeleccion('Tipo3N');"
+                        >
                          <option></option>
                        </select>
                        <input type="text" name="tTipo3N" id="tTipo3N" value="">

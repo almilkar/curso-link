@@ -74,7 +74,7 @@ module.exports = app => {
 	});
 
 	/*	----------------------------------------------------------------
-		* 	/enlaces/idcatex/:idcat
+		* 	/enlaces/idcatex/:idprede
 		* 	Recupera todas las categorías del nivel seleccionado para un predecesor
 		* 	Método para ajax
 		----------------------------------------------------------------
@@ -180,10 +180,29 @@ module.exports = app => {
 	});
 
 
+// --------------------- Agregar, modificar registro de enlaces ---------------
 
-	app.post('/enlaces/add', (req, res) => {
+	app.post('/enlaces/addenlace', (req, res) => {
 		
-	});
+		const {enlace_e, titulo_e, id_categoria_e, id_usuario_c} = req.body;
+
+		console.log 
+
+		connection.query('INSERT INTO enlaces SET ?', {enlace_e, titulo_e, id_categoria_e, id_usuario_c}, (err, result) => {
+				if (!err) {
+					connection.query('SELECT LAST_INSERT_ID() AS id;',	(err, result) => {
+							console.log(result);
+							//res.send(result);		
+						});
+				} else {
+					console.log(err);
+					//res.end();
+				}
+				res.redirect('/enlaces/list');
+			});
+		});
+
+	//////////////////////////////////////////////////////////////////////////////////
 
 	app.post('/enlaces/upd', (req, res) => {
 
