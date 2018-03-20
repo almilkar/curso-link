@@ -49,15 +49,17 @@
     </nav>
 
     <div class="container">
+      
       <div class="row">
         <div class="col mt-2">
-          <table class="table table-striped">
+          <table class="table table-striped table-hover">
             <tr>
               <th style="display: none">Id</th><th>Link</th><th>Title</th>
               <th style="display: none">Cat</th><th style="display: none">Usu</th>
             </tr>
             <% for(var i = 0; i < enlaces.length; i++) { %>
-              <tr onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
+              <tr style="cursor: pointer;"
+                onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
                     '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')">
                     <td style="display: none"><%= enlaces[i].id_enlace_e %></td>
                     <td><%= enlaces[i].enlace_e %></td>
@@ -68,7 +70,8 @@
             <% } %>
           </table>
         </div> <!-- 1 col   Table end -->
-
+      </div>
+      <div class="row">
         <div class="col mt-2">      <!-- 2 col   Ini Formulario -->
           <!-- Ini Formulario: idFormEnlaces -->
           <form method="get" id="idFormEnlaces" class="form-control">
@@ -98,6 +101,10 @@
               <label>Tree of Categories</label>
               <!-- Select para cargar categorias nivel 1 -->
               <div class="row mt-1 border-bottom">
+                <div class="col-sm-1">
+                  <button type="button" onclick="expandeCategoria('Tipo1N', 1)"
+                    class="btn btn-primary btn-sm">Fill</button>
+                </div>
                 <div class="col-sm-6">
                   <div id="div1N" class="select-editable">
             		      <select id="Tipo1N" name="Tipo1N"
@@ -108,12 +115,11 @@
                       <input type="text" name="tTipo1N" id="tTipo1N" value="">
             	    </div>
                 </div>
+
                 <div class="col-sm-1">
                   <span>*</span>
                 </div>
-                <div class="col-sm-5">
-                  <button type="button" onclick="expandeCategoria('Tipo1N', 1)"
-                    class="btn btn-primary btn-sm">Expand</button>
+                <div class="col-sm-4">
                   <button type="button" onclick="grabaCategoriaN1()" 
                     class="btn btn-primary btn-sm">Add</button>
                   <button type="button" onclick="modificaTituloCategoriaNN('Tipo1N')" 
@@ -122,6 +128,10 @@
               </div>
               <!-- Select para cargar categorias nivel 2 -->
               <div class="row mt-1 border-bottom ">
+                <div class="col-sm-1">
+                  <button type="button" onclick="expandeCategoria('Tipo1N', 2)"
+                    class="btn btn-primary btn-sm">Fill</button>
+                </div>
                 <div class="col-sm-6">
             	    <div id="divDD2N" class="select-editable">
             		    <select  id="Tipo2N" name="Tipo2N"
@@ -135,9 +145,7 @@
                 <div class="col-sm-1">
                   <span>*</span>
                 </div>
-                <div class="col-sm-5">
-                  <button type="button" onclick="expandeCategoria('Tipo1N', 2)"
-                    class="btn btn-primary btn-sm">Expand</button>
+                <div class="col-sm-4">
                   <button type="button" onclick="grabaCategoriaN2()" 
                     class="btn btn-primary btn-sm">Add</button>
                   <button type="button" onclick="modificaTituloCategoriaNN('Tipo2N')" 
@@ -146,6 +154,10 @@
               </div>
               <!-- Select para cargar categorias nivel 3 -->
               <div class="row mt-1 border-bottom">
+                <div class="col-sm-1">
+                  <button type="button" onclick="expandeCategoria('Tipo2N', 3)"
+                    class="btn btn-primary btn-sm">Fill</button>
+                </div>
                 <div class="col-sm-6">
             	      <div id="divDD3N" class="select-editable">
             		        <select id="Tipo3N" name="Tipo3N"
@@ -159,9 +171,7 @@
                 <div class="col-sm-1">
                   <span>*</span>
                 </div>
-                <div class="col-sm-5">
-                  <button type="button" onclick="expandeCategoria('Tipo2N', 3)"
-                    class="btn btn-primary btn-sm">Expand</button>
+                <div class="col-sm-4">
                   <button type="button" onclick="grabaCategoriaN3()" 
                     class="btn btn-primary btn-sm">Add</button>
                   <button type="button" onclick="modificaTituloCategoriaNN('Tipo3N')" 
@@ -184,8 +194,7 @@
               <div>
 
           </form>
-        </div>
-
+        </div> <!-- col -->
       </div>   <!-- row -->
     </div>     <!-- End Main container   -->
 
