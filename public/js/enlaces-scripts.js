@@ -199,12 +199,7 @@ function creaDD(dato, iSelector, blanco) {
   var dd = document.getElementById(iSelector);  // dropdown
   dd.length = 0;
   document.getElementById("t" + iSelector).value = "";
-  /*
-  if (blanco == true) {
-    document.getElementById("t" + iSelector).value = "";
-  }
-  */
-
+  
   option = document.createElement('option');
   option.value = ""; option.text = "";
   dd.add(option);
@@ -219,24 +214,6 @@ function creaDD(dato, iSelector, blanco) {
     option.text = dato[i].titulo_c;
     dd.add(option);
   }
-
-  /*
-  dd.selectedIndex = 0;
-
-  if (i==0) {
-      document.getElementById("t" + iSelector).value = "";
-  } else {
-      document.getElementById("t" + iSelector).value = tomaSeleccion(iSelector);
-  }
-  if (blanco == true) {
-    //option = document.createElement('option');
-    //dd.add(option);
-    document.getElementById("t" + iSelector).value = "";
-  }
-  */
-
-  
-
 }
 /////////////////////////////////////////////////////////////////////
 function vaciaDD(dds) {
@@ -306,6 +283,46 @@ function modificaTituloCategoriaNN(idTipoN) {
     }                         //  y si no, siguen las comprobaciones
 
   }
+}
+/////////////////////////////////////////////////////////////////////
+function buscaCategoriaEfectiva() {
+  if (leeCategoriaEfectiva("tipo3N")) {
+    ;
+  } else {
+    if (leeCategoriaEfectiva("tipo2N")) {
+      ;
+    } else {
+      if (leeCategoriaEfectiva("tipo2N")) {
+        ;
+      }
+    }
+  }
+}
+/////////////////////////////////////////////////////////////////////
+function leeCategoriaEfectiva(tipoN) {
+  var id_usuario_c = "2";
+  var valor = "";
+  var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
+  var i = document.getElementById(tipoN).selectedIndex;
+
+  if (i>=0) {
+    valor = document.getElementById(tipoN).options[i].value;
+  } else {
+    return false;
+  }
+
+  if (valor.trim() != "") {   // Existe una seleccion dentro de la lista actual   
+    titulo_c = document.getElementById(tipoN).options[i].text;
+           t = document.getElementById("t" + tipoN).value;
+    if (titulo_c != t) return false;  // Se ha sobrescrito el texto de la selección
+    arrValor = valor.split("|", 3);
+    id_categoria_c = arrValor[0];
+    nivel_c = arrValor[1];
+    prede_c = arrValor[2];
+  } else {
+    return false;
+  } 
+  return true;
 }
 /////////////////////////////////////////////////////////////////////
 function grabaCategoriaN1() {
