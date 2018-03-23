@@ -151,8 +151,6 @@ module.exports = app => {
 		
 		const {nivel_c, titulo_c, id_usuario_c, prede_c} = req.body;
 
-		//res.send("2");
-		
 		connection.query('INSERT INTO categorias SET ?', {nivel_c, titulo_c, id_usuario_c, prede_c}, (err, result) => {
 				if (!err) {
 					connection.query('SELECT LAST_INSERT_ID() AS id;',	(err, result) => {
@@ -184,11 +182,9 @@ module.exports = app => {
 
 	app.post('/enlaces/addenlace', (req, res) => {
 		
-		const {enlace_e, titulo_e, id_categoria_e, id_usuario_c} = req.body;
+		const {enlace_e, titulo_e, id_categoria_e, id_usuario_e} = req.body;
 
-		console.log 
-
-		connection.query('INSERT INTO enlaces SET ?', {enlace_e, titulo_e, id_categoria_e, id_usuario_c}, (err, result) => {
+		connection.query('INSERT INTO enlaces SET ?', {enlace_e, titulo_e, id_categoria_e, id_usuario_e}, (err, result) => {
 				if (!err) {
 					connection.query('SELECT LAST_INSERT_ID() AS id;',	(err, result) => {
 							console.log(result);
@@ -204,22 +200,37 @@ module.exports = app => {
 
 	//////////////////////////////////////////////////////////////////////////////////
 
-	app.post('/enlaces/upd', (req, res) => {
+	app.post('/enlaces/updenlace', (req, res) => {
 
-		const {id_enlace_e, enlace_e, titulo_e, id_usuario_e, id_categoria_e, id_categoria_c, titulo_c, nivel_c, prede_c} = req.body;
+		const {id_enlace_e, enlace_e, titulo_e, id_categoria_e} = req.body;
 
-		connection.query('INSERT INTO categorias (titulo_c, nivel_c, prede_c) VALUES ? ', [{titulo_c, nivel_c, prede_c}],	(err, result) => {
-			if (!err) {
-				connection.query('UPDATE enlaces SET ? WHERE ?', [{enlace_e, titulo_e, id_categoria_e}, {id_enlace_e}],	(err, result) => {
+		connection.query('UPDATE enlaces SET ? WHERE ?', 
+			[{enlace_e, titulo_e, id_categoria_e}, {id_enlace_e}],	(err, result) => {
+				if (!err) {
 					res.redirect('/enlaces/list');
-				});
-			} else {
+				} else {
+					console.log(err);
 					res.redirect('/enlaces/list');
-			}
+				}
 		});
-		res.send(req.body);
-		//res.redirect('/enlaces/list');
 	});
+	/////////////////////////////////////////////////////////////////////////////////
+	app.post('/enlaces/delenlace', (req, res) => {
+
+		const {id_enlace_e} = req.body;
+
+		connection.query('DELETE FROM enlaces WHERE ?', [{id_enlace_e}],	(err, result) => {
+				if (!err) {
+					res.redirect('/enlaces/list');
+				} else {
+					console.log(err);
+					res.redirect('/enlaces/list');
+				}
+				console.log(result.affectedRows + " record(s) deleted");
+		});
+	});
+
+
 
 
 }    /////  END END END 

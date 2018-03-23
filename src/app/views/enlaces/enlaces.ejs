@@ -80,7 +80,7 @@
           <!-- Ini Formulario: idFormEnlaces -->
           <form method="get" id="idFormEnlaces" class="form-control">
             <h5 id="tituloOperacion" class="text-right">Add a link</h5>
-            <input type="hidden" name="id_enlace_e" id="id_enlace_e" class="form-control" readonly>
+            <input type="hidden" name="id_enlace_e" id="id_enlace_e" class="form-control">
             <div class="form-group">
               <label for="enlace_e">Link</label>
               <input type="text" name="enlace_e" id="enlace_e" class="form-control" placeholder="e.g. http://www.site.dom">
@@ -94,10 +94,12 @@
             <div>  
               <input type="hidden" name="id_usuario_e" id="id_usuario_e">
               <input type="hidden" name="id_categoria_e" id="id_categoria_e">
+              <!--
               <input type="hidden" name="id_categoria_c" id="id_categoria_c">
               <input type="hidden" name="titulo_c" id="titulo_c">
               <input type="hidden" name="nivel_c" id="nivel_c">
               <input type="hidden" name="prede_c" id="prede_c">
+              -->
             </div>
           </form>
         </div> <!-- col 1 -->
@@ -188,9 +190,11 @@
               <!-- Botones funciones, nuevo, modificar, limpiar forms  -->
               <div class="row mt-1 border-bottom">
                 <div class="col-sm-12">
-                  <input type="button" value="New Link" onclick="nuevoEnlace('idFormEnlaces')" 
+                  <input type="button" value="New" onclick="nuevoEnlace('idFormEnlaces')" 
                     class="btn btn-default">
-                  <input type="button" value="Update Link" onclick="modificaEnlace('idFormEnlaces')" 
+                  <input type="button" value="Update" onclick="modificaEnlace('idFormEnlaces')" 
+                    class="btn btn-default">
+                  <input type="button" value="Del" onclick="borraEnlace('idFormEnlaces')" 
                     class="btn btn-default">
                   <input type="button" value="Clear" 
                     onclick="limpiaformsEnlace(['idFormEnlaces','idFormCategorias'])" 

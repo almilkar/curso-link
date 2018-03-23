@@ -286,14 +286,19 @@ function modificaTituloCategoriaNN(idTipoN) {
 }
 /////////////////////////////////////////////////////////////////////
 function buscaCategoriaEfectiva() {
-  if (leeCategoriaEfectiva("tipo3N")) {
-    ;
+  var valor = leeCategoriaEfectiva("Tipo3N");
+  if (valor != "") {
+    return valor;
   } else {
-    if (leeCategoriaEfectiva("tipo2N")) {
-      ;
+    valor = leeCategoriaEfectiva("Tipo2N")
+    if (valor != "") {
+      return valor;
     } else {
-      if (leeCategoriaEfectiva("tipo2N")) {
-        ;
+      valor = leeCategoriaEfectiva("Tipo1N")
+      if (valor != "") {
+        return valor;
+      } else {
+        return "";
       }
     }
   }
@@ -303,26 +308,29 @@ function leeCategoriaEfectiva(tipoN) {
   var id_usuario_c = "2";
   var valor = "";
   var arrValor, id_categoria_c, nivel_c, prede_c, t, titulo_c;
+
+  if (document.getElementById(tipoN) == undefined) return "";
+
   var i = document.getElementById(tipoN).selectedIndex;
 
   if (i>=0) {
     valor = document.getElementById(tipoN).options[i].value;
   } else {
-    return false;
+    return "";
   }
 
   if (valor.trim() != "") {   // Existe una seleccion dentro de la lista actual   
     titulo_c = document.getElementById(tipoN).options[i].text;
            t = document.getElementById("t" + tipoN).value;
-    if (titulo_c != t) return false;  // Se ha sobrescrito el texto de la selección
+    if (t == "") return "";  // Se ha sobrescrito el texto de la selección
     arrValor = valor.split("|", 3);
     id_categoria_c = arrValor[0];
     nivel_c = arrValor[1];
     prede_c = arrValor[2];
   } else {
-    return false;
+    return "";
   } 
-  return true;
+  return valor;
 }
 /////////////////////////////////////////////////////////////////////
 function grabaCategoriaN1() {
@@ -463,7 +471,10 @@ function grabaCategoriaN3() {
 
 // ----
 function nuevoEnlace(idForm) {
-  if (leeSelectCategorias()) {
+  var varCat = buscaCategoriaEfectiva();
+  var arrCat = varCat.split("|",3);
+  if (arrCat.length == 3) {
+    document.getElementById("id_categoria_e").value = arrCat[0];
     document.getElementById(idForm).action = "/enlaces/addenlace";
     document.getElementById(idForm).method = "POST";
     document.getElementById(idForm).submit();
@@ -471,12 +482,20 @@ function nuevoEnlace(idForm) {
 }
 // ----
 function modificaEnlace(idForm) {
-  if (leeSelectCategorias()) {
-    var idEnlace = document.getElementById('id_enlace_e').value;
-    document.getElementById(idForm).action = "/enlaces/updenlace/" + idEnlace;
+  var varCat = buscaCategoriaEfectiva();
+  var arrCat = varCat.split("|",3);
+  if (arrCat.length == 3) {
+    document.getElementById("id_categoria_e").value = arrCat[0];
+    document.getElementById(idForm).action = "/enlaces/updenlace/";
     document.getElementById(idForm).method = "POST";
     document.getElementById(idForm).submit();
   }
+}
+// ----
+function borraEnlace(idForm) {
+    document.getElementById(idForm).action = "/enlaces/delenlace/";
+    document.getElementById(idForm).method = "POST";
+    document.getElementById(idForm).submit();
 }
 // ----
 function limpiaformsEnlace(forms) {
