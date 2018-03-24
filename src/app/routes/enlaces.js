@@ -13,6 +13,22 @@ module.exports = app => {
   		next();
 	});
 
+	app.get('/enlaces/listafiltro/:idCategoria', (req, res) => {
+		var idcat = req.params.idCategoria;
+		
+		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
+		
+		if (idcat > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
+		
+		connection.query(sqlq, (err, result) => {
+			if (!err) res.send(result);
+			else console.log(err);
+		});
+	});
+
+
+
+
 	/*	---------------------------------------------------------------
 		*	Lista enlaces
 		*
@@ -20,12 +36,7 @@ module.exports = app => {
 	app.get('/enlaces/list', leeEnlaces, renderEnlacesPagina);
 
 	function leeEnlaces(req, res, next) {
-		/*
-		if (res.query) {
-			if (res.query.id_usuario_e === undefined) idUsuario = 1; // anonymous
-			else idUsuario = res.query.id_usuario_e;
-		}
-		*/
+		
 		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario);
 		connection.query(sqlq, (err, result) => {
 			req.enlaces = result;
@@ -197,9 +208,7 @@ module.exports = app => {
 				res.redirect('/enlaces/list');
 			});
 		});
-
 	//////////////////////////////////////////////////////////////////////////////////
-
 	app.post('/enlaces/updenlace', (req, res) => {
 
 		const {id_enlace_e, enlace_e, titulo_e, id_categoria_e} = req.body;
@@ -231,11 +240,6 @@ module.exports = app => {
 	});
 
 
-
-
 }    /////  END END END 
 
 
-
-//INSERT INTO tbl (auto,text) VALUES(NULL,'text');
-//INSERT INTO tbl2 (id,text) VALUES(LAST_INSERT_ID(),'text');
