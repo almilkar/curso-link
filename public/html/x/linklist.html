@@ -13,6 +13,9 @@
 
     <!-- Visualizar los -->
   	<script>
+
+    // 1:"http://", 2:"soria.diario.co", 3:"uk", 4:"/hoy", 5:"?noticias=futbol&sucesos=hockey"
+
     function leeEnlacesPorCategoria(idCat) {
       
   	$(document).ready(function(r) {
@@ -29,12 +32,11 @@
   		$.get(url, function(r) {
     		r.forEach(function(fila) {
           var tr = $('<tr>');
-          // /https?://(?:[-w]+.)?([-w]+).w+(?:.w+)?/?.*/i
-          var aux = fila.enlace_e.match(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/);
+         
+          var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
 
-     			tr.append("<td>" + fila.enlace_e + "***</td>" + "<td>" + aux[1] + "</td>");
-
-
+          console.log(aux);
+     			tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
 
           tabla.append(tr);    
      		});
@@ -46,10 +48,30 @@
 
    leeEnlacesPorCategoria("a");
 
+   function atras() {
+    document.getElementById("direccion").value = -5;
+    document.getElementById("frmListaEnlaces").submit();
+   }
+
+   function adelante() {
+    document.getElementById("direccion").value = 5;
+    document.getElementById("frmListaEnlaces").submit();
+   }
+
 	 </script>
 
-   <div id="contenedor">
-   </div>
+   <form id="frmListaEnlaces">
+     <div id="contenedor"></div>
+
+     <div id="btnMueveLista">
+      <input type="button" value="Atras" onclick="atras()">
+      <input type="button" value="Adelante"  onclick="adelante()">
+     </div>
+
+    </form>
+
+
+
 
   	<!--  =====================================================  -->
   <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" 

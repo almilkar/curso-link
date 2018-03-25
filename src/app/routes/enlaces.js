@@ -20,6 +20,8 @@ module.exports = app => {
 		
 		if (idcat > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
 		
+		sqlq = sqlq + " LIMIT 0, 2"
+
 		connection.query(sqlq, (err, result) => {
 			if (!err) res.send(result);
 			else console.log(err);
