@@ -4,10 +4,9 @@
     <meta charset="utf-8">
     <title>Prueba de Listado de Enlaces</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+      crossorigin="anonymous">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
   </head>
   <body>
 
@@ -80,7 +79,8 @@
             var ini = x;
             var fin = x + numFilasPorPagina;
             var td = $('<td>');
-            var aux = "<a href='#' onclick='datosPaginaEnlaces(" + ini + "," + fin + ")'>" + x + "</a>";
+            var aux = "<a href='#' onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini + ", \"fila_final\":" + fin + "})'>" + x + "</a>";
+            
             td.append(aux);
             tr.append(td);
           };
@@ -141,13 +141,12 @@
 
    <form id="frmListaEnlaces">
      <div id="contenedor" style="height: 200px"></div>
-     <div id="selector"></div>
-
-     <div id="btnMueveLista">
+     
+     <div id="btnMueveLista" style="display: inline-block;">
       <input type="button" value="[<<]" onclick="atras()">
+      <div id="selector" style="display: inline-block;"></div>
       <input type="button" value="[>>]" onclick="adelante()">
      </div>
-
   </form>
 
 
