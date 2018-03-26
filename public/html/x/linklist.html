@@ -13,62 +13,142 @@
 
     <!-- Visualizar los -->
   	<script>
-
-    // 1:"http://", 2:"soria.diario.co", 3:"uk", 4:"/hoy", 5:"?noticias=futbol&sucesos=hockey"
+      datosPrepPaginaEnlaces();
 
     function leeEnlacesPorCategoria(idCat) {
       
-  	$(document).ready(function(r) {
+    	$(document).ready(function(r) {
+        var contenedor = $('#contenedor'); 
+        var tabla = $('<table>'); 
+        var url;
+
+        if ((idCat == undefined)||(isNaN(idCat) == true)) {
+          url = "/enlaces/listafiltro/0";
+        } else {
+          url = "/enlaces/listafiltro/" + idCat;
+        }
+
+    		$.get(url, function(r) {
+      		r.forEach(function(fila) {
+            var tr = $('<tr>');
+           
+            var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+
+       			tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
+
+            tabla.append(tr);    
+       		});
+          contenedor.append(tabla);
+       	});
+
+      });
+    } 
+
+   //leeEnlacesPorCategoria("a");
+
+  ////////////////////////////////////////////
+  // sqlUpdateCategoria({"titulo_c": titulo_c, "id_categoria_c": id_categoria_c});
+  // datosPagina = {"filaactual": filaactual, "id_categoria_c": id_categoria_c}
+  function datosPaginaEnlaces2(datosPagina) {
+    var xhr = new XMLHttpRequest();
+    var data = JSON.stringify(datosPagina);
+
+    var url = "/enlaces/lista-enlaces";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    xhr.onreadystatechange = function () { 
+      if (this.readyState == 4 && this.status == 200) {
+        var resultados = this.responseText;
+        presentaLista(resultados);
+      }
+    }
+    xhr.send(data);
+  }
+
+  /// ---------------------------------------------------------------------
+
+  function datosPrepPaginaEnlaces(datosPagina) {
+    $.post("/enlaces/listaprep-enlaces", datosPagina, function(data, status) {
+        if (status == "success") {
+          var numFilasPorPagina = 2;
+          var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
+          // ----------------------------------------
+          var selector = $('#selector'); 
+          var tabla = $('<table>'); 
+          var tr = $('<tr>');
+          for (var x = 1; x <= paginas; x++) {
+            var ini = x;
+            var fin = x + numFilasPorPagina;
+            var td = $('<td>');
+            var aux = "<a href='#' onclick='datosPaginaEnlaces(" + ini + "," + fin + ")'>" + x + "</a>";
+            td.append(aux);
+            tr.append(td);
+          };
+          tabla.append(tr);
+          selector.append(tabla);
+          // ----------------------------------------
+          var resultados = data.filas;
+          presentaLista(resultados);
+        }
+    });
+  }
+
+  /// ---------------------------------------------------------------------
+
+  function datosPaginaEnlaces(datosPagina) {
+    $.post("/enlaces/lista-enlaces", datosPagina, function(data, status) {
+        if (status == "success") {
+          presentaLista(data);
+        }
+    });
+
+  }
+
+  ////////////////////////////////////////////
+
+  function presentaLista(resultados) {
+    $(document).ready(function(r) {
+
+      $("#contenedor").empty();
+
       var contenedor = $('#contenedor'); 
       var tabla = $('<table>'); 
       var url;
 
-      if ((idCat == undefined)||(isNaN(idCat) == true)) {
-        url = "/enlaces/listafiltro/0";
-      } else {
-        url = "/enlaces/listafiltro/" + idCat;
-      }
-
-  		$.get(url, function(r) {
-    		r.forEach(function(fila) {
-          var tr = $('<tr>');
-         
-          var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
-
-          console.log(aux);
-     			tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
-
-          tabla.append(tr);    
-     		});
-        contenedor.append(tabla);
-     	});
-
+      resultados.forEach(function(fila) {
+        var tr = $('<tr>'); 
+        var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+        tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
+        tabla.append(tr);    
+      });
+      contenedor.append(tabla);
     });
    } 
 
-   leeEnlacesPorCategoria("a");
+  ////////////////////////////////////////////
 
    function atras() {
-    document.getElementById("direccion").value = -5;
-    document.getElementById("frmListaEnlaces").submit();
+    datosPaginaEnlaces({"fila_inicial": 0, "fila_final": 5});
    }
 
    function adelante() {
-    document.getElementById("direccion").value = 5;
-    document.getElementById("frmListaEnlaces").submit();
+    datosPaginaEnlaces({"fila_inicial": 3, "fila_final": 4});
    }
+
+   ////////////////////////////////////////////
 
 	 </script>
 
    <form id="frmListaEnlaces">
-     <div id="contenedor"></div>
+     <div id="contenedor" style="height: 200px"></div>
+     <div id="selector"></div>
 
      <div id="btnMueveLista">
-      <input type="button" value="Atras" onclick="atras()">
-      <input type="button" value="Adelante"  onclick="adelante()">
+      <input type="button" value="[<<]" onclick="atras()">
+      <input type="button" value="[>>]" onclick="adelante()">
      </div>
 
-    </form>
+  </form>
 
 
 

@@ -28,8 +28,46 @@ module.exports = app => {
 		});
 	});
 
+	// -----------------------------------------------------------------------------
 
+	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
+		const {idCategoria} = req.body;
+		var numRegistros = 0;
+		var sqlq = 'SELECT COUNT(*) AS cuantos FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
+		if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
+		connection.query(sqlq, (err, result) => {
+			if (!err) numRegistros = result[0].cuantos;
+			sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)	
+			if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
+			sqlq = sqlq + " LIMIT 2";
+			connection.query(sqlq, (err, result) => {
+				var datos = {};
+				datos.numfilas = numRegistros;
+				datos.filas = result;
+				if (!err) res.send(datos);
+				else console.log(err);
+			});
+		});
+	});
 
+	// -----------------------------
+
+	app.post('/enlaces/lista-enlaces/', (req, res) => {
+		const {fila_inicial, fila_final} = req.body;
+		
+		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
+		
+		//if (idcat > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
+		
+		sqlq = sqlq + " LIMIT " + fila_inicial + "," + (fila_final - fila_inicial);
+
+		console.log(sqlq);
+
+		connection.query(sqlq, (err, result) => {
+			if (!err) res.send(result);
+			else console.log(err);
+		});
+	});
 
 	/*	---------------------------------------------------------------
 		*	Lista enlaces
