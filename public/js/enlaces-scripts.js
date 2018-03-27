@@ -517,9 +517,10 @@ function listaEnlaces(idForm) {
     document.getElementById(idForm).action = "/enlaces/list/";
   } else {
     var idCat = arrCat[0];
-    document.getElementById(idForm).action = "/enlaces/list/" + idCat;  
+    document.getElementById("id_categoria_e").value = idCat;
+    document.getElementById(idForm).action = "/enlaces/list/";  
   }
-  document.getElementById(idForm).method = "GET";
+  document.getElementById(idForm).method = "POST";
   document.getElementById(idForm).submit();
 }
 

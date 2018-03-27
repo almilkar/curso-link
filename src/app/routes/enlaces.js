@@ -74,15 +74,17 @@ module.exports = app => {
 		*
 	*/
 	app.get('/enlaces/list', leeEnlaces, renderEnlacesPagina);
-	app.get('/enlaces/list/:idcat', leeEnlaces, renderEnlacesPagina);
+	app.post('/enlaces/list', leeEnlaces, renderEnlacesPagina);
 
 	function leeEnlaces(req, res, next) {
 		var idcat;
 		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario);
-		if (req.params.idcat != undefined) {
-			idcat = req.params.idcat;
+
+		if (req.body.id_categoria_e != undefined) {
+			var idcat = req.body.id_categoria_e;
 			sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
 		}
+		console.log(sqlq);
 		connection.query(sqlq, (err, result) => {
 			req.enlaces = result;
 			next();
@@ -93,9 +95,10 @@ module.exports = app => {
 		*
 	*/
 	function renderEnlacesPagina(req, res) {
-    res.render('enlaces/enlaces.ejs', {
-        enlaces: req.enlaces
-    });
+		console.log(req.enlaces);
+    	res.render('enlaces/enlaces.ejs', {
+        	enlaces: req.enlaces
+    	});
 	}
 
 	/*	----------------------------------------------------------------
@@ -145,6 +148,34 @@ module.exports = app => {
 	});
 
 	/*	----------------------------------------------------------------
+		
+
+	*/
+
+	app.get('/enlaces/trescat/:idcat',  (req, res) => {
+		var objRes = {N1: null, N2: null, N3: null};
+		var idcat = req.params.idcat;
+		var sqlq = "SELECT prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat); 
+		console.log(sqlq);
+		connection.query(sqlq, (err, result) => {
+			objRes.N3 = result.titulo_c;
+			prede_c = result.prede_c;
+			sqlq = "SELECT id_categoria_c, prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(prede_c);
+			connection.query(sqlq, (err, result) => {
+				objRes.N2 = result.titulo_c;
+				prede_c = result.prede_c;
+				sqlq = "SELECT id_categoria_c, prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(prede_c);
+				connection.query(sqlq, (err, result) => {
+					objRes.N3 = result.titulo_c;
+					prede_c = result.prede_c;
+				});
+			});
+		});
+
+	});
+
+
+	/*	----------------------------------------------------------------
 		* 	/enlaces/idcat/:idcat
 	 	* 	Recupera las categorías de siguiente nivel que descienden de la
 	 	* 	categoría pasada como parámetro.
@@ -160,17 +191,17 @@ module.exports = app => {
 			var objRes = {categorias3N: null, categorias2N: null, categorias1N: null};
 			switch(nivel) {
 	  	case 1:
-				objRes.categorias1N = result;
-	      		ifIdCatPrimerNivelSimple(objRes, idcat, nivel, prede, res);
-	      break;
+			objRes.categorias1N = result;
+	      	ifIdCatPrimerNivelSimple(objRes, idcat, nivel, prede, res);
+	      	break;
 	  	case 2:
-				objRes.categorias2N = result;
-				ifIdCatSegundoNivelSimple(objRes, idcat, nivel, prede, res);
-	      break;
-			case 3:
-				objRes.categorias3N = result;
-				ifIdCatTercerNivelSimple(objRes, idcat, nivel, prede, res);
-				break;
+			objRes.categorias2N = result;
+			ifIdCatSegundoNivelSimple(objRes, idcat, nivel, prede, res);
+	      	break;
+		case 3:
+			objRes.categorias3N = result;
+			ifIdCatTercerNivelSimple(objRes, idcat, nivel, prede, res);
+			break;
 			}
 		});
 	});
