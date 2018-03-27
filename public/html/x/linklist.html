@@ -15,54 +15,26 @@
       datosPrepPaginaEnlaces();
 
     function leeEnlacesPorCategoria(idCat) {
-      
     	$(document).ready(function(r) {
         var contenedor = $('#contenedor'); 
         var tabla = $('<table>'); 
         var url;
-
         if ((idCat == undefined)||(isNaN(idCat) == true)) {
           url = "/enlaces/listafiltro/0";
         } else {
           url = "/enlaces/listafiltro/" + idCat;
         }
-
     		$.get(url, function(r) {
       		r.forEach(function(fila) {
             var tr = $('<tr>');
-           
             var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
-
        			tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
-
             tabla.append(tr);    
        		});
           contenedor.append(tabla);
        	});
-
       });
     } 
-
-   //leeEnlacesPorCategoria("a");
-
-  ////////////////////////////////////////////
-  // sqlUpdateCategoria({"titulo_c": titulo_c, "id_categoria_c": id_categoria_c});
-  // datosPagina = {"filaactual": filaactual, "id_categoria_c": id_categoria_c}
-  function datosPaginaEnlaces2(datosPagina) {
-    var xhr = new XMLHttpRequest();
-    var data = JSON.stringify(datosPagina);
-
-    var url = "/enlaces/lista-enlaces";
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    xhr.onreadystatechange = function () { 
-      if (this.readyState == 4 && this.status == 200) {
-        var resultados = this.responseText;
-        presentaLista(resultados);
-      }
-    }
-    xhr.send(data);
-  }
 
   /// ---------------------------------------------------------------------
 
@@ -108,13 +80,10 @@
 
   function presentaLista(resultados) {
     $(document).ready(function(r) {
-
       $("#contenedor").empty();
-
       var contenedor = $('#contenedor'); 
       var tabla = $('<table>'); 
       var url;
-
       resultados.forEach(function(fila) {
         var tr = $('<tr>'); 
         var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);

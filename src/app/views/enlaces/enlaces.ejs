@@ -7,6 +7,7 @@
     <script src="/js/enlaces-scripts.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
       <style type="text/css">
       .select-editable {
@@ -61,15 +62,45 @@
             </thead>
             <tbody>
             <% for(var i = 0; i < enlaces.length; i++) { %>
+      
+              <tr  
+                onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
+                    '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')"
+              >
+                <td>N</td>
+                <td>
+                  <table border="1">
+                    <tr>
+                      <td id="<%= 'c_dominio' + i  %>">
+                        <script>
+                        var t = "<%= enlaces[i].enlace_e %>".match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+                        $("<%= '#c_dominio' + i  %>").text(t[2]);
+                        </script>
+                      </td>
+                      <td>Categoria->SubCat1->SubCat2</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><%= enlaces[i].titulo_e %></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+        
+            <!-- 
               <tr 
                 onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
                     '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')">
-                    <td style="display: none"><%= enlaces[i].id_enlace_e %></td>
-                    <td><%= enlaces[i].enlace_e %></td>
-                    <td><%= enlaces[i].titulo_e %></td>
-                    <td style="display: none"><%= enlaces[i].id_categoria_e %></td>
-                    <td style="display: none"><%= enlaces[i].id_usuario_e %></td>
+                    
+                    <td id="<%= 'c_dominio' + i  %>">
+                      <script>
+                        var t = "<%= enlaces[i].enlace_e %>".match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+                        $("<%= '#c_dominio' + i  %>").text(t[2]);
+                      </script>
+                    </td>
+                    <td><%= enlaces[i].titulo_e %></td> 
               </tr>
+            -->
+
             <% } %>
             </tbody>
           </table>
@@ -205,7 +236,7 @@
     </div>     <!-- End Main container   -->
 
   <!--  =====================================================  -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
