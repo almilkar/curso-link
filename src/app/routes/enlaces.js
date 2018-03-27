@@ -74,10 +74,15 @@ module.exports = app => {
 		*
 	*/
 	app.get('/enlaces/list', leeEnlaces, renderEnlacesPagina);
+	app.get('/enlaces/list/:idcat', leeEnlaces, renderEnlacesPagina);
 
 	function leeEnlaces(req, res, next) {
-		
+		var idcat;
 		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario);
+		if (req.params.idcat != undefined) {
+			idcat = req.params.idcat;
+			sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
+		}
 		connection.query(sqlq, (err, result) => {
 			req.enlaces = result;
 			next();

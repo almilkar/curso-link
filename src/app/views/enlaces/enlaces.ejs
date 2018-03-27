@@ -86,21 +86,6 @@
                 </td>
               </tr>
         
-            <!-- 
-              <tr 
-                onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
-                    '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')">
-                    
-                    <td id="<%= 'c_dominio' + i  %>">
-                      <script>
-                        var t = "<%= enlaces[i].enlace_e %>".match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
-                        $("<%= '#c_dominio' + i  %>").text(t[2]);
-                      </script>
-                    </td>
-                    <td><%= enlaces[i].titulo_e %></td> 
-              </tr>
-            -->
-
             <% } %>
             </tbody>
           </table>
@@ -225,7 +210,7 @@
                     onclick="limpiaformsEnlace(['idFormEnlaces','idFormCategorias'])" 
                     class="btn btn-default">
                   <input type="button" value="List" 
-                    onclick="listaEnlaces()" 
+                    onclick="listaEnlaces('idFormEnlaces')" 
                     class="btn btn-default">  
                 </div>
               <div>

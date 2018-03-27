@@ -285,6 +285,9 @@ function modificaTituloCategoriaNN(idTipoN) {
   }
 }
 /////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
 function buscaCategoriaEfectiva() {
   var valor = leeCategoriaEfectiva("Tipo3N");
   if (valor != "") {
@@ -506,4 +509,19 @@ function limpiaformsEnlace(forms) {
   vaciaDD(["Tipo1N","Tipo2N","Tipo3N"]);
 }
 // ----
+// Lista enlaces desde el boton listar
+function listaEnlaces(idForm) {
+  var varCat = buscaCategoriaEfectiva();
+  arrCat = varCat.split("|");
+  if (arrCat.length != 3) {
+    document.getElementById(idForm).action = "/enlaces/list/";
+  } else {
+    var idCat = arrCat[0];
+    document.getElementById(idForm).action = "/enlaces/list/" + idCat;  
+  }
+  document.getElementById(idForm).method = "GET";
+  document.getElementById(idForm).submit();
+}
+
+
 
