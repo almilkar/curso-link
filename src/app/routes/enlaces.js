@@ -153,25 +153,43 @@ module.exports = app => {
 	*/
 
 	app.get('/enlaces/trescat/:idcat',  (req, res) => {
-		var objRes = {N1: null, N2: null, N3: null};
+		var objRes = [];
+		var prede_c;
 		var idcat = req.params.idcat;
-		var sqlq = "SELECT prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat); 
-		console.log(sqlq);
+		var sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat); 
+		console.log("3" + sqlq);
 		connection.query(sqlq, (err, result) => {
-			objRes.N3 = result.titulo_c;
-			prede_c = result.prede_c;
-			sqlq = "SELECT id_categoria_c, prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(prede_c);
+			if (result.length > 0) {
+				objRes[result[0].nivel_c] = result[0];
+				idcat = result[0].prede_c;
+			} else {
+				res.send(objRes);
+				return;
+			}
+			sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat);
+			console.log("2" + sqlq);
 			connection.query(sqlq, (err, result) => {
-				objRes.N2 = result.titulo_c;
-				prede_c = result.prede_c;
-				sqlq = "SELECT id_categoria_c, prede_c FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(prede_c);
+				if (result.length > 0) {
+					objRes[result[0].nivel_c] = result[0];
+					idcat = result[0].prede_c;
+				} else {
+					res.send(objRes);
+					return;
+				}
+				sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat);
+				console.log("1" + sqlq);
 				connection.query(sqlq, (err, result) => {
-					objRes.N3 = result.titulo_c;
-					prede_c = result.prede_c;
+					if (result.length > 0) {
+						objRes[result[0].nivel_c] = result[0];
+						idcat = result[0].prede_c;
+					} else {
+						res.send(objRes);
+						return;
+					}
+					res.send(objRes);
 				});
 			});
 		});
-
 	});
 
 
