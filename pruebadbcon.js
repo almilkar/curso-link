@@ -7,8 +7,17 @@ const mysql = require('mysql');
     database: 'news_portal'
   });
 
-  conn.query('SELECT * FROM news', (err, filas) => {
-      console.log(filas);
-	  conn.end();
-  });
   
+  function consulta() {
+    conn.query('SELECT * FROM enlaces', (err, filas) => {
+     console.log(filas);
+	   conn.end();
+    });
+  }
+  
+  function main() {
+    consulta();
+    console.log("Hola")
+  }
+
+  main();

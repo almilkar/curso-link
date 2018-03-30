@@ -28,6 +28,48 @@ module.exports = app => {
 		});
 	});
 
+
+	// -----------------------------------------------------------------------------
+	app.get('/enlaces/cadenacat/:idcat', leeCadenaCat, enviaCadenaCat);
+
+	function leeCadenaCat (req, res, next)  {
+		const idCategoria = req.params.idcat;     // req.body;
+		var objDatos = {};
+		var sqlq = 'SELECT * FROM categorias WHERE id_categoria_c = ' + idCategoria;
+	    connection.query(sqlq, (err, result) => {
+	    	objDatos[result[0].nivel_c] = result[0];
+	    	if (result.length == 0) {req.resp = objDatos;next();}
+	    	var prede_c = result[0].prede_c
+	    	var sqlq = 'SELECT * FROM categorias WHERE id_categoria_c = ' + prede_c;
+	    	connection.query(sqlq, (err, result) => {
+	    		objDatos[result[0].nivel_c] = result[0];
+	    		if (result.length == 0) {req.resp = objDatos;next();}
+	    		var prede_c = result[0].prede_c
+	    		var sqlq = 'SELECT * FROM categorias WHERE id_categoria_c = ' + prede_c;
+	    		connection.query(sqlq, (err, result) => {
+	    			
+	    			if (result.length == 0) {
+	    				req.resp = objDatos; next();
+	    			} else {
+	    				objDatos[result[0].nivel_c] = result[0]; req.resp = objDatos; next();	
+	    			}
+	     			
+	     		});
+	    	});
+		});
+	};
+
+	function enviaCadenaCat(req, res) {
+		console.log("Queriendo enviar");
+		res.send(req.resp);
+	}
+
+
+
+
+
+
+
 	// -----------------------------------------------------------------------------
 
 	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
@@ -44,6 +86,13 @@ module.exports = app => {
 				var datos = {};
 				datos.numfilas = numRegistros;
 				datos.filas = result;
+				for (var i = 0; i < result.length; i++) {
+    				leeTresCategorias(result[i].id_categoria_e);
+				}
+
+
+
+
 				if (!err) res.send(datos);
 				else console.log(err);
 			});
@@ -84,7 +133,7 @@ module.exports = app => {
 			var idcat = req.body.id_categoria_e;
 			sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
 		}
-		console.log(sqlq);
+		//console.log(sqlq);
 		connection.query(sqlq, (err, result) => {
 			req.enlaces = result;
 			next();
@@ -95,7 +144,7 @@ module.exports = app => {
 		*
 	*/
 	function renderEnlacesPagina(req, res) {
-		console.log(req.enlaces);
+		//console.log(req.enlaces);
     	res.render('enlaces/enlaces.ejs', {
         	enlaces: req.enlaces
     	});
@@ -151,47 +200,7 @@ module.exports = app => {
 		
 
 	*/
-
-	app.get('/enlaces/trescat/:idcat',  (req, res) => {
-		var objRes = [];
-		var prede_c;
-		var idcat = req.params.idcat;
-		var sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat); 
-		console.log("3" + sqlq);
-		connection.query(sqlq, (err, result) => {
-			if (result.length > 0) {
-				objRes[result[0].nivel_c] = result[0];
-				idcat = result[0].prede_c;
-			} else {
-				res.send(objRes);
-				return;
-			}
-			sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat);
-			console.log("2" + sqlq);
-			connection.query(sqlq, (err, result) => {
-				if (result.length > 0) {
-					objRes[result[0].nivel_c] = result[0];
-					idcat = result[0].prede_c;
-				} else {
-					res.send(objRes);
-					return;
-				}
-				sqlq = "SELECT * FROM categorias WHERE id_usuario_c = 2 AND id_categoria_c = " + connection.escape(idcat);
-				console.log("1" + sqlq);
-				connection.query(sqlq, (err, result) => {
-					if (result.length > 0) {
-						objRes[result[0].nivel_c] = result[0];
-						idcat = result[0].prede_c;
-					} else {
-						res.send(objRes);
-						return;
-					}
-					res.send(objRes);
-				});
-			});
-		});
-	});
-
+	
 
 	/*	----------------------------------------------------------------
 		* 	/enlaces/idcat/:idcat
