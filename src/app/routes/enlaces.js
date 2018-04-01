@@ -86,11 +86,6 @@ module.exports = app => {
 				var datos = {};
 				datos.numfilas = numRegistros;
 				datos.filas = result;
-				for (var i = 0; i < result.length; i++) {
-    				leeTresCategorias(result[i].id_categoria_e);
-				}
-
-
 
 
 				if (!err) res.send(datos);

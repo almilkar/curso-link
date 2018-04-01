@@ -14,8 +14,8 @@
   	<script>
       datosPrepPaginaEnlaces();
 
-    function leeEnlacesPorCategoria(idCat) {
-    	$(document).ready(function(r) {
+  function leeEnlacesPorCategoria(idCat) {
+      $(document).ready(function(r) {
         var contenedor = $('#contenedor'); 
         var tabla = $('<table>'); 
         var url;
@@ -24,18 +24,17 @@
         } else {
           url = "/enlaces/listafiltro/" + idCat;
         }
-    		$.get(url, function(r) {
-      		r.forEach(function(fila) {
+        $.get(url, function(r) {
+          r.forEach(function(fila) {
             var tr = $('<tr>');
             var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
-       			tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
+            tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
             tabla.append(tr);    
-       		});
+          });
           contenedor.append(tabla);
-       	});
+        });
       });
     } 
-
   /// ---------------------------------------------------------------------
 
   function datosPrepPaginaEnlaces(datosPagina) {
@@ -51,8 +50,7 @@
             var ini = x;
             var fin = x + numFilasPorPagina;
             var td = $('<td>');
-            var aux = "<a href='#' onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini + ", \"fila_final\":" + fin + "})'>" + x + "</a>";
-            
+            var aux = "<a href='#' onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini + ", \"fila_final\":" + fin + "})'>" + x + "</a>"
             td.append(aux);
             tr.append(td);
           };

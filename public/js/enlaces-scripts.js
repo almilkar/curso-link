@@ -477,6 +477,7 @@ function nuevoEnlace(idForm) {
   var varCat = buscaCategoriaEfectiva();
   var arrCat = varCat.split("|",3);
   if (arrCat.length == 3) {
+    document.getElementById("id_usuario_e").value = 2;
     document.getElementById("id_categoria_e").value = arrCat[0];
     document.getElementById(idForm).action = "/enlaces/addenlace";
     document.getElementById(idForm).method = "POST";
