@@ -60,8 +60,8 @@
             </tr>
             </thead>
             <tbody>
+
             <% for(var i = 0; i < enlaces.length; i++) { %>
-      
               <tr  
                 onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
                     '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')"
@@ -84,8 +84,8 @@
                   </table>
                 </td>
               </tr>
-        
             <% } %>
+            
             </tbody>
           </table>
         </div> <!-- 1 col   Table end -->
@@ -199,7 +199,7 @@
               <!-- Botones funciones, nuevo, modificar, limpiar forms  -->
               <div class="row mt-1 border-bottom">
                 <div class="col-sm-12">
-                  <input type="button" value="New" onclick="nuevoEnlace('idFormEnlaces')" 
+                  <input type="button" value="Add" onclick="nuevoEnlace('idFormEnlaces')" 
                     class="btn btn-default">
                   <input type="button" value="Update" onclick="modificaEnlace('idFormEnlaces')" 
                     class="btn btn-default">

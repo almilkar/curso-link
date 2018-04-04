@@ -73,6 +73,7 @@ module.exports = app => {
 	// -----------------------------------------------------------------------------
 
 	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
+		const filasPorPagina = 5;
 		const {idCategoria} = req.body;
 		var numRegistros = 0;
 		var sqlq = 'SELECT COUNT(*) AS cuantos FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
@@ -81,13 +82,11 @@ module.exports = app => {
 			if (!err) numRegistros = result[0].cuantos;
 			sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)	
 			if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
-			sqlq = sqlq + " LIMIT 2";
+			sqlq = sqlq + " LIMIT " + filasPorPagina;
 			connection.query(sqlq, (err, result) => {
 				var datos = {};
 				datos.numfilas = numRegistros;
 				datos.filas = result;
-
-
 				if (!err) res.send(datos);
 				else console.log(err);
 			});
@@ -97,13 +96,11 @@ module.exports = app => {
 	// -----------------------------
 
 	app.post('/enlaces/lista-enlaces/', (req, res) => {
+		const filasPorPagina = 5;
 		const {fila_inicial, fila_final} = req.body;
-		
 		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
-		
 		//if (idcat > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idcat;
-		
-		sqlq = sqlq + " LIMIT " + fila_inicial + "," + (fila_final - fila_inicial);
+		sqlq = sqlq + " LIMIT " + (fila_inicial-1)*5 + "," + (fila_final - fila_inicial);
 
 		console.log(sqlq);
 
