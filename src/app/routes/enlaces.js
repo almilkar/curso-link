@@ -69,8 +69,10 @@ module.exports = app => {
 
 
 
-
-	// -----------------------------------------------------------------------------
+	///////////////////////////////////////////////////////////////////////////////////
+	//	Calcula el nº de registros total y recupera los primeros 5 (filasPorPagina) 
+	//
+	//	La llamada desde el cliente crea los controles de navegación y presenta las 5 primeras filas.
 
 	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
 		const filasPorPagina = 5;
@@ -93,7 +95,10 @@ module.exports = app => {
 		});
 	});
 
-	// -----------------------------
+	///////////////////////////////////////////////////////////////////////////////////////////
+	//	Responde a las peticiones desde los controles de navegación (por página) del cliente
+	//
+	//
 
 	app.post('/enlaces/lista-enlaces/', (req, res) => {
 		const filasPorPagina = 5;

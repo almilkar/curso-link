@@ -38,8 +38,39 @@
       });
     });
   } 
-  /// ---------------------------------------------------------------------
 
+  /// ---------------------------------------------------------------------
+  /// ????????????????????????????????
+  /// ---------------------------------------------------------------------
+  function creaControlesNavegacion(datosPagina) {
+    //$.post("/enlaces/listaprep-enlaces", datosPagina, function(data, status) {
+        //if (status == "success") {
+          var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
+          // ----------------------------------------
+          $("#selector").empty();
+          var selector = $('#selector'); 
+          var tabla = $('<table>'); 
+          var tr = $('<tr>');
+          for (var x = 1; x <= paginas; x++) {
+            var ini = x;
+            var fin = x + numFilasPorPagina;
+            var td = $('<td>');
+            var aux = "<a href='#' id='hrefPagina" + x + "'  onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini 
+                              + ", \"fila_final\":" + fin + ", \"pagina_actual\":" + x + " })'>" 
+                              + x + "</a>";
+            td.append(aux);
+            tr.append(td);
+          };
+          tabla.append(tr);
+          selector.append(tabla);
+          // ----------------------------------------
+          var resultados = data.filas;
+          presentaLista(resultados);
+        //}
+    //});
+  }
+
+  /// ---------------------------------------------------------------------
   function datosPrepPaginaEnlaces(datosPagina) {
     $.post("/enlaces/listaprep-enlaces", datosPagina, function(data, status) {
         if (status == "success") {
