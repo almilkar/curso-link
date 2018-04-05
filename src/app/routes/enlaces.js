@@ -97,6 +97,7 @@ module.exports = app => {
 
 	app.post('/enlaces/lista-enlaces/', (req, res) => {
 		const filasPorPagina = 5;
+		const grupoPaginas = 22222; // lo manejan los controles de avance y retroceso a ambos lados de la lista de paginas 
 		const {fila_inicial, fila_final} = req.body;
 		var sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
 		//if (idcat > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idcat;

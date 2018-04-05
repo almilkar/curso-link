@@ -45,6 +45,7 @@
         if (status == "success") {
           var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
           // ----------------------------------------
+          $("#selector").empty();
           var selector = $('#selector'); 
           var tabla = $('<table>'); 
           var tr = $('<tr>');
@@ -80,6 +81,12 @@
   }
 
   ////////////////////////////////////////////
+  // function presentaLista(resultados, paginaActual)
+  //  resultados: filas de una query.
+  //  paginaActual: número de indicador de página del elemento [a href]
+  //  Desencadenado por el evento onclick sobre el [a href] indicador de página
+  // Imprime los resultados de la consulta entre código HTML
+  ///////////////////////////////////////////////////////////////////////////////
 
   function presentaLista(resultados, paginaActual) {
     $(document).ready(function(r) {
