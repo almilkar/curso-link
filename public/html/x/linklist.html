@@ -13,65 +13,25 @@
     <!-- Visualizar los -->
   	<script>
 
+      var numGrupoPaginas = 1;
+
       var numFilasPorPagina = 5;
+
+      var grupo_pagina = 0;
 
       datosPrepPaginaEnlaces();
 
-  function leeEnlacesPorCategoria(idCat) {
-    $(document).ready(function(r) {
-      var contenedor = $('#contenedor'); 
-      var tabla = $('<table>'); 
-      var url;
-      if ((idCat == undefined)||(isNaN(idCat) == true)) {
-        url = "/enlaces/listafiltro/0";
-      } else {
-        url = "/enlaces/listafiltro/" + idCat;
-      }
-      $.get(url, function(r) {
-        r.forEach(function(fila) {
-          var tr = $('<tr>');
-          var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
-          tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
-          tabla.append(tr);    
-        });
-        contenedor.append(tabla);
-      });
-    });
-  } 
+  
 
-  /// ---------------------------------------------------------------------
-  /// ????????????????????????????????
-  /// ---------------------------------------------------------------------
-  function creaControlesNavegacion(datosPagina) {
-    //$.post("/enlaces/listaprep-enlaces", datosPagina, function(data, status) {
-        //if (status == "success") {
-          var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
-          // ----------------------------------------
-          $("#selector").empty();
-          var selector = $('#selector'); 
-          var tabla = $('<table>'); 
-          var tr = $('<tr>');
-          for (var x = 1; x <= paginas; x++) {
-            var ini = x;
-            var fin = x + numFilasPorPagina;
-            var td = $('<td>');
-            var aux = "<a href='#' id='hrefPagina" + x + "'  onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini 
-                              + ", \"fila_final\":" + fin + ", \"pagina_actual\":" + x + " })'>" 
-                              + x + "</a>";
-            td.append(aux);
-            tr.append(td);
-          };
-          tabla.append(tr);
-          selector.append(tabla);
-          // ----------------------------------------
-          var resultados = data.filas;
-          presentaLista(resultados);
-        //}
-    //});
-  }
+  
+  ////////////////////////////////////////////////////
+  // datosPrepPaginaEnlaces(datosPagina)
+  // datosPagina: el identificador de categoria como filtro
+  //              
+  //
 
-  /// ---------------------------------------------------------------------
   function datosPrepPaginaEnlaces(datosPagina) {
+   
     $.post("/enlaces/listaprep-enlaces", datosPagina, function(data, status) {
         if (status == "success") {
           var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
@@ -80,6 +40,10 @@
           var selector = $('#selector'); 
           var tabla = $('<table>'); 
           var tr = $('<tr>');
+          var td = $('<td>');
+          var aux = "<a href='#' id='hrefPaginaAnte' onclick='datosPaginaEnlaces({\"grupo_pagina\":" + grupo_pagina + " })'>" + "---" + "</a>";
+          td.append(aux); tr.append(td);
+
           for (var x = 1; x <= paginas; x++) {
             var ini = x;
             var fin = x + numFilasPorPagina;
@@ -87,9 +51,11 @@
             var aux = "<a href='#' id='hrefPagina" + x + "'  onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini 
                               + ", \"fila_final\":" + fin + ", \"pagina_actual\":" + x + " })'>" 
                               + x + "</a>";
-            td.append(aux);
-            tr.append(td);
+            td.append(aux); tr.append(td);
           };
+
+          var aux = "<a href='#' id='hrefPaginaPost' onclick='datosPaginaEnlaces({\"grupo_pagina\":" + grupo_pagina + " })'>" + "+++" + "</a>";
+          td.append(aux); tr.append(td);
           tabla.append(tr);
           selector.append(tabla);
           // ----------------------------------------
@@ -98,7 +64,6 @@
         }
     });
   }
-
   /// ---------------------------------------------------------------------
 
   function datosPaginaEnlaces(datosPagina) {
@@ -106,9 +71,14 @@
     $.post("/enlaces/lista-enlaces", datosPagina, function(data, status) {
         if (status == "success") {
           presentaLista(data, paginaActual);
+
+          var paginaAnterior = paginaActual - 1;
+          var paginaPosterior = paginaActual + 1;
+          $("#hrefPagina" + paginaAnterior).css("color", "blue");
+          $("#hrefPagina" + paginaActual).css("color", "red");
+          $("#hrefPagina" + paginaPosterior).css("color", "blue");
         }
     });
-
   }
 
   ////////////////////////////////////////////
@@ -133,11 +103,6 @@
       });
       contenedor.append(tabla);
     });
-      var paginaAnterior = paginaActual - 1;
-      var paginaPosterior = paginaActual + 1;
-      $("#hrefPagina" + paginaAnterior).css("color", "blue");
-      $("#hrefPagina" + paginaActual).css("color", "red");
-      $("#hrefPagina" + paginaPosterior).css("color", "blue");
    } 
 
   ////////////////////////////////////////////
@@ -183,3 +148,72 @@
 
   </body>
   </html>
+
+<script>
+ function leeEnlacesPorCategoria(idCat) {
+    $(document).ready(function(r) {
+      var contenedor = $('#contenedor'); 
+      var tabla = $('<table>'); 
+      var url;
+      if ((idCat == undefined)||(isNaN(idCat) == true)) {
+        url = "/enlaces/listafiltro/0";
+      } else {
+        url = "/enlaces/listafiltro/" + idCat;
+      }
+      $.get(url, function(r) {
+        r.forEach(function(fila) {
+          var tr = $('<tr>');
+          var aux = fila.enlace_e.match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+          tr.append("<td>" + fila.enlace_e + "</td>" + "<td>" + aux[2] + "</td>");
+          tabla.append(tr);    
+        });
+        contenedor.append(tabla);
+      });
+    });
+  } 
+///////////////////////////////////////////////////////
+  //
+  //
+
+  function creaControlesNavegacion(datosPagina) {
+    
+          var paginas = Math.ceil(data.numfilas / numFilasPorPagina);
+          // ----------------------------------------
+          $("#selector").empty();
+          var selector = $('#selector'); 
+          var tabla = $('<table>'); 
+          var tr = $('<tr>');
+          for (var x = 1; x <= paginas; x++) {
+            var ini = x;
+            var fin = x + numFilasPorPagina;
+            var td = $('<td>');
+            var aux = "<a href='#' id='hrefPagina" + x + "'  onclick='datosPaginaEnlaces({\"fila_inicial\":" + ini 
+                              + ", \"fila_final\":" + fin + ", \"pagina_actual\":" + x + " })'>"  + x + "</a>";
+            td.append(aux);
+            tr.append(td);
+          };
+          tabla.append(tr);
+          selector.append(tabla);
+          // ----------------------------------------
+          var resultados = data.filas;
+          presentaLista(resultados);
+       
+  }
+
+  /// ---------------------------------------------------------------------
+
+  function datosPaginaEnlaces2(datosPagina) {
+    var paginaActual = datosPagina.pagina_actual;
+    $.post("/enlaces/lista-enlaces", datosPagina, function(data, status) {
+        if (status == "success") {
+          presentaLista(data, paginaActual);
+
+          var paginaAnterior = paginaActual - 1;
+          var paginaPosterior = paginaActual + 1;
+          $("#hrefPagina" + paginaAnterior).css("color", "blue");
+          $("#hrefPagina" + paginaActual).css("color", "red");
+          $("#hrefPagina" + paginaPosterior).css("color", "blue");
+        }
+    });
+  }
+</script>

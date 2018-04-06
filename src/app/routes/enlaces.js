@@ -76,7 +76,7 @@ module.exports = app => {
 
 	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
 		const filasPorPagina = 5;
-		const {idCategoria} = req.body;
+		const {idCategoria, fila_inicial, fila_final} = req.body;
 		var numRegistros = 0;
 		var sqlq = 'SELECT COUNT(*) AS cuantos FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
 		if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
@@ -84,7 +84,8 @@ module.exports = app => {
 			if (!err) numRegistros = result[0].cuantos;
 			sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)	
 			if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
-			sqlq = sqlq + " LIMIT " + filasPorPagina;
+			//sqlq = sqlq + " LIMIT " + filasPorPagina;
+			sqlq = sqlq + " LIMIT " + (fila_inicial-1)*5 + "," + (fila_final - fila_inicial);
 			connection.query(sqlq, (err, result) => {
 				var datos = {};
 				datos.numfilas = numRegistros;
