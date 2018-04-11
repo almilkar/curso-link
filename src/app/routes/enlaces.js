@@ -60,36 +60,56 @@ module.exports = app => {
 	};
 
 	function enviaCadenaCat(req, res) {
-		console.log("Queriendo enviar");
 		res.send(req.resp);
 	}
-
-
-
-
 
 
 	///////////////////////////////////////////////////////////////////////////////////
 	//	Calcula el nº de registros total y recupera los primeros 5 (filasPorPagina) 
 	//
 	//	La llamada desde el cliente crea los controles de navegación y presenta las 5 primeras filas.
+	//
+	// 	datosPagina.grupoPagAnterior = 0
+    // 	datosPagina.grupoPagActual = 1
+    //	datosPagina.grupoPagPosterior = 2
 
 	app.post('/enlaces/listaprep-enlaces/', (req, res) => {
 		const filasPorPagina = 5;
-		const {idCategoria, fila_inicial, fila_final} = req.body;
+		const paginasPorBloque = 4;
+		const filasPorBloque = 15;
+		var id_categoria = req.body.id_categoria;
+		var pagina_desde = req.body.pagina_desde;
+		var bloque_actual = req.body.bloque_actual;
+
+		//var fila_desde = pagina_desde * filasPorPagina;
+
+		var fila_desde = (parseInt(pagina_desde) + paginasPorBloque * (bloque_actual - 1)) * filasPorPagina;
+		console.log("--------------------");
+		console.log(fila_desde);
+		console.log(pagina_desde);
+		console.log(paginasPorBloque);
+		console.log(bloque_actual);
+		console.log(filasPorPagina);
+		console.log("--------------------");
+
 		var numRegistros = 0;
 		var sqlq = 'SELECT COUNT(*) AS cuantos FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
-		if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
+		if (id_categoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + id_categoria;
 		connection.query(sqlq, (err, result) => {
 			if (!err) numRegistros = result[0].cuantos;
 			sqlq = 'SELECT * FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)	
-			if (idCategoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + idCategoria;
-			//sqlq = sqlq + " LIMIT " + filasPorPagina;
-			sqlq = sqlq + " LIMIT " + (fila_inicial-1)*5 + "," + (fila_final - fila_inicial);
+			if (id_categoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + id_categoria;
+			sqlq = sqlq + " LIMIT " + filasPorPagina + " OFFSET " + fila_desde;
+			console.log(sqlq);
 			connection.query(sqlq, (err, result) => {
 				var datos = {};
+				datos.filasporpagina = filasPorPagina;
+				datos.filasporbloque = filasPorBloque;
+				datos.paginasporbloque = paginasPorBloque;
 				datos.numfilas = numRegistros;
 				datos.filas = result;
+				datos.fila_desde = fila_desde;
+				datos.bloque_actual = bloque_actual;
 				if (!err) res.send(datos);
 				else console.log(err);
 			});
