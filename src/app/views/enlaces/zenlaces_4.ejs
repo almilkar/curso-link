@@ -53,11 +53,43 @@
       
       <div class="row">
         <div class="col mt-2">
-          <!-- tabla Inicio |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| -->
+          <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+            <tr>
+              <th>N</th><th>Categories / Link Title</th>
+            </tr>
+            </thead>
+            <tbody>
 
-        </div> <!-- tabla Fin |||||||||||||||||||||||||||||||||| --> <!-- 1 col   Table end -->
+            <% for(var i = 0; i < enlaces.length; i++) { %>
+              <tr  
+                onclick="selecciona('<%= enlaces[i].id_enlace_e %>', '<%= enlaces[i].enlace_e %>',
+                    '<%= enlaces[i].titulo_e %>', '<%= enlaces[i].id_categoria_e %>', '<%= enlaces[i].id_usuario_e %>')"
+              >
+                <td>N</td>
+                <td>
+                  <table border="1">
+                    <tr>
+                      <td id="<%= 'c_dominio' + i  %>">
+                        <script>
+                        var t = "<%= enlaces[i].enlace_e %>".match(/(^https:\/\/|^http:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)(\?[\da-z\.-=&]*)*/);
+                        $("<%= '#c_dominio' + i  %>").text(t[2]);
+                        </script>
+                      </td>
+                      <td>Categoria->SubCat1->SubCat2</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2"><%= enlaces[i].titulo_e %></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            <% } %>
+            
+            </tbody>
+          </table>
+        </div> <!-- 1 col   Table end -->
       </div>
-      
       <div class="row">
         <div class="col mt-2">      <!-- 2 col   Ini Formulario -->
           <!-- Ini Formulario: idFormEnlaces -->

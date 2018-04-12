@@ -81,17 +81,7 @@ module.exports = app => {
 		var pagina_desde = req.body.pagina_desde;
 		var bloque_actual = req.body.bloque_actual;
 
-		//var fila_desde = pagina_desde * filasPorPagina;
-
 		var fila_desde = (parseInt(pagina_desde) + paginasPorBloque * (bloque_actual - 1)) * filasPorPagina;
-		console.log("--------------------");
-		console.log(fila_desde);
-		console.log(pagina_desde);
-		console.log(paginasPorBloque);
-		console.log(bloque_actual);
-		console.log(filasPorPagina);
-		console.log("--------------------");
-
 		var numRegistros = 0;
 		var sqlq = 'SELECT COUNT(*) AS cuantos FROM enlaces WHERE id_usuario_e = ' + connection.escape(idUsuario)
 		if (id_categoria > 0) sqlq = sqlq + ' AND id_categoria_e = ' + id_categoria;
